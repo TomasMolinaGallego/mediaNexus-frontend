@@ -1,0 +1,92 @@
+.mediaList {
+  /* Usamos minmax para que las tarjetas nunca midan menos de 180px 
+     pero crezcan para llenar el espacio sobrante */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 25px;
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 0 20px;
+  
+  /* Animación de entrada */
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* --- Ajustes para pantallas pequeñas --- */
+@media (max-width: 768px) {
+  .mediaList {
+    /* En móviles reducimos el mínimo a 140px para que quepan 2 columnas cómodamente */
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 0 10px;
+    margin: 15px auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .mediaList {
+    /* Para móviles muy pequeños (iPhone SE), permitimos que bajen a 120px */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
+
+/* --- Loading Indicator Styles --- */
+.loadingWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loader {
+  display: flex;
+  gap: 8px;
+}
+
+.circle {
+  width: 12px;
+  height: 12px;
+  background-color: #e50914; /* Rojo Alexandria */
+  border-radius: 50%;
+  animation: pulse 1.5s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+.circle:nth-child(2) { animation-delay: 0.2s; }
+.circle:nth-child(3) { animation-delay: 0.4s; }
+
+.loadingText {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* --- Empty Search State --- */
+.emptyState {
+  text-align: center;
+  padding: 100px 20px;
+  color: #555;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+/* --- Keyframe Animations --- */
+@keyframes pulse {
+  0%, 100% { transform: scale(0.5); opacity: 0.3; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(15px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}

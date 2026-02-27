@@ -1,0 +1,113 @@
+.appContainer {
+  display: flex; /* Esto pone el Sidebar y el Main lado a lado */
+  background-color: #0a0a0a;
+  min-height: 100vh;
+  color: white;
+  overflow: hidden; /* Evita scrolls dobles extraños */
+}
+
+.mainContent {
+  flex: 1; /* Ocupa todo el espacio restante */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+.scrollableArea {
+  flex: 1;
+  overflow-y: auto; /* El scroll sucede aquí, no en toda la página */
+  padding-bottom: 50px;
+}
+
+/* Personalización del scrollbar para que sea rojo/negro */
+.scrollableArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollableArea::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+.scrollableArea::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+.scrollableArea::-webkit-scrollbar-thumb:hover {
+  background: #e50914; /* Rojo al pasar el ratón */
+}
+
+.contentBody {
+    padding: 20px 5%;
+    position: relative;
+    z-index: 10; /* Aumenta si es necesario */
+    background-color: #0a0a0a;
+    /* Asegúrate de que no tenga un margin-top negativo que suba la lista */
+    margin-top: 0; 
+}
+.sectionTitle {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: white;
+  font-weight: 700;
+  border-left: 4px solid #e50914; /* Detalle rojo estilo Netflix */
+  padding-left: 15px;
+}
+
+.configWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 20px;
+    min-height: 100%;
+    background: radial-gradient(circle at top, #151515 0%, #0a0a0a 100%);
+    animation: fadeInConfig 0.4s ease-out;
+}
+
+@keyframes fadeInConfig {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Opcional: Estilo para el botón de ajustes si lo pones en el Sidebar */
+.settingsIconActive {
+    color: #e50914 !important;
+    background: rgba(229, 9, 20, 0.1);
+}
+
+.appContainer {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden; /* Evita el scroll horizontal */
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0; /* ¡CRÍTICO! Permite que los hijos de flexbox se encojan */
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+/* Ajuste de margen para el Sidebar en Escritorio */
+@media (min-width: 1025px) {
+  .mainContent {
+    margin-left: 70px; /* Ancho del sidebar colapsado */
+  }
+}
+
+/* En móvil, el contenido ocupa el 100% real */
+@media (max-width: 1024px) {
+  .mainContent {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+}

@@ -1,0 +1,122 @@
+.container {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    padding: 30px;
+    max-width: 600px;
+    margin: 40px auto;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.header {
+    border-bottom: 2px solid #e50914;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: #fff;
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    color: #e50914;
+    font-weight: 800;
+}
+
+.section {
+    margin-bottom: 25px;
+}
+
+.label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #444;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.inputGroup {
+    display: flex;
+    margin-bottom: 10px;
+    border: 1px solid #222;
+}
+
+.inputPrefix {
+    background: #111;
+    padding: 10px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: #e50914;
+    min-width: 70px;
+    text-align: center;
+}
+
+.input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 10px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.input:focus {
+    background: #111;
+}
+
+.addButton {
+    background: transparent;
+    border: 1px dashed #333;
+    color: #666;
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 800;
+    transition: 0.2s;
+}
+
+.addButton:hover {
+    border-color: #e50914;
+    color: #e50914;
+}
+
+.footer {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.saveButton {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+    transition: 0.3s;
+}
+
+.saveButton:hover {
+    background: #fff;
+    color: #000;
+}
+
+.status {
+    padding: 10px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.success { color: #4caf50; background: rgba(76, 175, 80, 0.1); }
+.error { color: #f44336; background: rgba(244, 67, 54, 0.1); }
+.info { color: #2196f3; }

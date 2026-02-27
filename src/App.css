@@ -1,38 +1,58 @@
-.App {
-  text-align: center;
-}
+/**
+ * APP LAYOUT
+ * Manages the relationship between the fixed Sidebar and the scrollable Main Content.
+ */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.appContainer {
+  display: flex;
   min-height: 100vh;
+  background-color: #0a0a0a; /* True black background */
+  color: #fff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.mainContent {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* Since Sidebar is fixed and 280px wide (collapsed 55px), 
+     we use a safe margin to ensure content is never hidden. */
+  margin-left: 55px; 
+  transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0; /* Prevents flexbox overflow issues */
+}
+
+/* Optional: If you want the content to push when sidebar opens, 
+   you would need a state in App or use a CSS variable. 
+   For now, 55px ensures the "Collapsed" bar doesn't cover text. */
+
+.contentBody {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Global Loading State Style --- */
+.loadingContainer {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  height: 50vh;
+  color: #e50914;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0; /* On mobile, sidebar usually becomes an overlay */
   }
-  to {
-    transform: rotate(360deg);
+  
+  .contentBody {
+    padding: 1rem;
   }
 }

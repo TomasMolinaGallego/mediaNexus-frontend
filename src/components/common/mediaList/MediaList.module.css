@@ -1,92 +1,156 @@
-.mediaList {
-  /* Usamos minmax para que las tarjetas nunca midan menos de 180px 
-     pero crezcan para llenar el espacio sobrante */
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 25px;
-  max-width: 1400px;
-  margin: 30px auto;
-  padding: 0 20px;
-  
-  /* Animación de entrada */
-  animation: fadeIn 0.5s ease-out;
+.listContainer {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-/* --- Ajustes para pantallas pequeñas --- */
-@media (max-width: 768px) {
-  .mediaList {
-    /* En móviles reducimos el mínimo a 140px para que quepan 2 columnas cómodamente */
+.mediaGrid {
+  display: grid;
+  /* El auto-fill es perfecto, pero bajamos el gap en pantallas pequeñas */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+  list-style: none; /* Quitamos los puntos de la lista */
+  padding: 0;
+  margin: 0;
+  
+  /* Optimizamos la animación para que el navegador la procese mejor */
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.gridItem {
+  /* Aseguramos que el li ocupe todo el alto para que MediaCard luzca bien */
+  display: flex;
+}
+
+/* --- Accesibilidad: Texto solo para lectores de pantalla --- */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .mediaGrid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mediaGrid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
-    padding: 0 10px;
-    margin: 15px auto;
+  }
+  .listContainer {
+    padding: 10px;
   }
 }
 
-@media (max-width: 360px) {
-  .mediaList {
-    /* Para móviles muy pequeños (iPhone SE), permitimos que bajen a 120px */
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-}
-
-/* --- Loading Indicator Styles --- */
+/* --- Estados --- */
 .loadingWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
-  gap: 20px;
-}
-
-.loader {
-  display: flex;
-  gap: 8px;
+  min-height: 50vh;
+  gap: 24px;
 }
 
 .circle {
-  width: 12px;
-  height: 12px;
-  background-color: #e50914; /* Rojo Alexandria */
+  width: 14px;
+  height: 14px;
+  background-color: #e50914;
   border-radius: 50%;
-  animation: pulse 1.5s infinite ease-in-out;
-  box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+  animation: pulse 1.2s infinite ease-in-out;
 }
 
-.circle:nth-child(2) { animation-delay: 0.2s; }
-.circle:nth-child(3) { animation-delay: 0.4s; }
-
-.loadingText {
-  color: #666;
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* --- Empty Search State --- */
-.emptyState {
-  text-align: center;
-  padding: 100px 20px;
-  color: #555;
-  font-size: 1.1rem;
-  font-style: italic;
-}
-
-/* --- Keyframe Animations --- */
-@keyframes pulse {
-  0%, 100% { transform: scale(0.5); opacity: 0.3; }
-  50% { transform: scale(1.2); opacity: 1; }
-}
-
+/* Keyframes optimizados */
 @keyframes fadeIn {
   from { 
     opacity: 0; 
-    transform: translateY(15px); 
+    transform: translateY(10px); 
   }
   to { 
     opacity: 1; 
     transform: translateY(0); 
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* --- SKELETON BASE --- */
+.skeletonCard {
+  background: #1a1a1a;
+  border-radius: 12px;
+  height: 250px; /* Misma altura que tus tarjetas */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.skeletonImage {
+  aspect-ratio: 16 / 9;
+  background: #252525;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonContent {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonTitle {
+  height: 14px;
+  width: 80%;
+  background: #252525;
+  border-radius: 4px;
+}
+
+.skeletonFooter {
+  height: 10px;
+  width: 40%;
+  background: #252525;
+  border-radius: 4px;
+  margin-top: auto;
+}
+
+/* --- ANIMACIÓN SHIMMER (El brillo) --- */
+.skeletonImage::after,
+.skeletonTitle::after,
+.skeletonFooter::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.06) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }

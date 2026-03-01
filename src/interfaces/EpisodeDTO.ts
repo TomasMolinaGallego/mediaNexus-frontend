@@ -3,6 +3,6 @@ export interface EpisodeDTO {
     fullName: string;
     frameUrl: string;
     folder: string;
-    disk: number;
+    aliasRoute: string;
     watched: boolean;
 }

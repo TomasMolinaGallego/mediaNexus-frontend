@@ -77,7 +77,7 @@ function App() {
 
                 <MediaList
                   medias={displayData}
-                  handleClick={handleMediaClick}
+                  handleMediaClick={handleMediaClick}
                   isInsideMedia={isInsideMedia}
                   onToggleWatched={isInsideMedia ? handleToggleWatched : undefined}
                   isLoading={isLoading}

@@ -1,6 +1,6 @@
 export interface MediaItem {
   title: string;
-  disk: string;
+  aliasRoute: string;
   image?: string;
   status?: string;
   folder?: string;

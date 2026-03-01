@@ -1,50 +1,54 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import MediaCard from '../mediaCard/MediaCard';
 import styles from './MediaList.module.css';
+import MediaSkeleton from './mediaSkeleton.jsx'
 
-/**
- * MediaList Component
- * Renderiza una rejilla fluida que se adapta al ancho de pantalla
- * sin necesidad de definir columnas fijas para cada dispositivo.
- */
-const MediaList = memo(({ medias, handleClick, isInsideMedia, onToggleWatched, isLoading }) => {
+const MediaList = memo(({ medias, handleMediaClick, isInsideMedia, onToggleWatched, isLoading }) => {
   
   if (isLoading) {
     return (
-      <div className={styles.loadingWrapper} role="status" aria-live="polite">
-        <div className={styles.loader}>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
-          <div className={styles.circle}></div>
+      <div className={styles.listContainer}>
+        <div className={styles.mediaGrid} aria-hidden="true">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <MediaSkeleton key={index} />
+          ))}
         </div>
-        <p className={styles.loadingText}>Sincronizando biblioteca...</p>
+        <span className={styles.srOnly} aria-live="polite">Cargando contenido...</span>
       </div>
     );
   }
 
+  // Estado vacío
   if (!medias || medias.length === 0) {
     return (
-      <div className={styles.emptyState}>
+      <div className={styles.emptyState} role="status">
         <p>No se encontraron resultados en Alexandria.</p>
       </div>
     );
   }
 
   return (
-    <section className={styles.mediaList} aria-label="Media Grid">
-      {medias.map((media) => (
-        <MediaCard
-          key={`${media.title}-${media.disk}`}
-          media={media}
-          onClick={handleClick}
-          isInsideMedia={isInsideMedia}
-          onToggleWatched={onToggleWatched} 
-        />
-      ))}
+    <section className={styles.listContainer}>
+      {/* Texto invisible para lectores de pantalla que indica el éxito de la búsqueda */}
+      <span className={styles.srOnly} aria-live="polite">
+        Se muestran {medias.length} resultados
+      </span>
+
+      <ul className={styles.mediaGrid} aria-label="Cuadrícula de medios">
+        {medias.map((media) => (
+          <li key={`${media.title}-${media.aliasRoute}`} className={styles.gridItem}>
+            <MediaCard
+              media={media}
+              handleMediaClick={handleMediaClick}
+              isInsideMedia={isInsideMedia}
+              onToggleWatched={onToggleWatched} 
+            />
+          </li>
+        ))}
+      </ul>
     </section>
   );
 });
 
 MediaList.displayName = 'MediaList';
-
 export default MediaList;

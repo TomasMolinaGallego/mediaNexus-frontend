@@ -17,16 +17,13 @@ const formatEpisodeName = (fileName) => {
         .replace(/_/g, " ")       // Replace underscores
         .trim();
 };
+// ... (mismos imports y utilidades)
 
-/**
- * MediaDetails Component
- * Decouples metadata fetching from UI rendering and handles loading states gracefully.
- */
 const MediaDetails = ({ series, onPlayNext }) => {
     const [metaData, setMetaData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // --- PROGRESS CALCULATION (Memoized) ---
+    // --- PROGRESS CALCULATION ---
     const { episodesSeen, totalEpisodes, progressPercent } = useMemo(() => {
         const seen = series?.watchedCount || 0;
         const total = series?.totalEpisodes || 1; 
@@ -37,58 +34,50 @@ const MediaDetails = ({ series, onPlayNext }) => {
         };
     }, [series]);
 
-    // --- METADATA FETCHING ---
+    // --- FETCHING (con limpieza de estado al cambiar) ---
     const fetchMetadata = useCallback(async () => {
         const searchTitle = series?.title || series?.folder;
         if (!searchTitle) return;
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
         setLoading(true);
+        
         try {
-            const url = `${API_BASE_URL}/api/media/metadata/${encodeURIComponent(searchTitle)}`;
-            const response = await fetch(url, { signal: controller.signal });
-            
-            if (!response.ok) throw new Error('Metadata not found');
-            
+            const response = await fetch(`${API_BASE_URL}/api/media/metadata/${encodeURIComponent(searchTitle)}`, { 
+                signal: controller.signal 
+            });
+            if (!response.ok) throw new Error('Metadata error');
             const data = await response.json();
             setMetaData(data);
         } catch (error) {
-            if (error.name !== 'AbortError') {
-                console.error('[MediaDetails] Error fetching metadata:', error);
-            }
-            setMetaData(null);
+            if (error.name !== 'AbortError') setMetaData(null);
         } finally {
-            clearTimeout(timeoutId);
             setLoading(false);
         }
+        return () => controller.abort();
     }, [series]);
 
     useEffect(() => {
-        setMetaData(null);
         fetchMetadata();
     }, [fetchMetadata]);
 
     if (!series) return null;
 
-    // --- DATA MAPPING (Clean Architecture Pattern) ---
     const display = {
         title: metaData?.title || series.title || series.folder,
         image: metaData?.image || series.image,
-        description: metaData?.description || 'Sin descripción disponible en la base de datos de Alexandria.',
+        description: metaData?.description || 'Sin descripción disponible en la base de datos.',
         score: metaData?.score,
-        year: metaData?.year || '2025',
+        year: metaData?.year || 'N/A',
         genres: metaData?.genres || [],
     };
 
     return (
-        <div className={styles.heroContainer}>
-            {/* Background Backdrop with Blur */}
+        <section className={styles.heroContainer} aria-label="Detalles de la serie">
             <div 
                 className={styles.heroBackdrop} 
                 style={{ backgroundImage: `url(${display.image})` }} 
-                role="presentation"
+                aria-hidden="true"
             />
             
             <div className={styles.heroContent}>
@@ -98,19 +87,12 @@ const MediaDetails = ({ series, onPlayNext }) => {
                         <div className={styles.skeletonTextCol}>
                             <div className={styles.skeletonTitle}></div>
                             <div className={styles.skeletonText}></div>
-                            <div className={styles.skeletonText}></div>
                         </div>
                     </div>
                 ) : (
                     <div className={styles.flexRow}>
-                        {/* Poster Section */}
                         <div className={styles.posterSide}>
-                            <img 
-                                src={display.image} 
-                                alt={display.title} 
-                                className={styles.miniPoster} 
-                                loading="eager"
-                            />
+                            <img src={display.image} alt="" className={styles.miniPoster} />
                             {display.score && (
                                 <div className={styles.scoreTag}>
                                     <span className={styles.star}>★</span> {display.score}
@@ -118,37 +100,31 @@ const MediaDetails = ({ series, onPlayNext }) => {
                             )}
                         </div>
 
-                        {/* Information Section */}
                         <div className={styles.textSide}>
                             <div className={styles.metaRow}>
                                 <span className={styles.cyberBadge}>SISTEMA_ACTIVO</span>
-                                <span className={styles.yearBadge}>{display.year}</span>
-                                <span className={styles.diskBadge}>DISK_0{series.disk}</span>
+                                <span className={styles.cyberBadge}>{display.year}</span>
                             </div>
 
                             <h1 className={styles.title}>{display.title}</h1>
 
                             <div className={styles.genreRow}>
-                                {display.genres.map((genre, index) => (
-                                    <span key={index} className={styles.genreItem}>
-                                        {genre}{index < display.genres.length - 1 ? ' • ' : ''}
+                                {display.genres.map((genre, i) => (
+                                    <span key={i} className={styles.genreItem}>
+                                        {genre}{i < display.genres.length - 1 ? ' • ' : ''}
                                     </span>
                                 ))}
                             </div>
 
-                            {/* Scrollable Description */}
                             <div className={styles.descriptionContainer}>
-                                <div className={styles.scrollContent}>
-                                    <p className={styles.descriptionText}>{display.description}</p>
-                                </div>
+                                <p className={styles.descriptionText}>{display.description}</p>
                             </div>
 
-                            {/* Action Footer */}
                             <div className={styles.actionFooter}>
                                 <div className={styles.progressBlock}>
                                     <div className={styles.progressInfo}>
-                                        <span>DATA_STREAM_PROGRESS</span>
-                                        <span>{episodesSeen} / {totalEpisodes} ARCHIVOS</span>
+                                        <span>PROGRESO</span>
+                                        <span>{episodesSeen} / {totalEpisodes}</span>
                                     </div>
                                     <div className={styles.progressTrack}>
                                         <div 
@@ -160,18 +136,17 @@ const MediaDetails = ({ series, onPlayNext }) => {
 
                                 <div className={styles.playInterface}>
                                     <div className={styles.nextInfo}>
-                                        <span className={styles.nextLabel}>SIGUIENTE_EPISODIO</span>
+                                        <span className={styles.nextLabel}>SIGUIENTE</span>
                                         <span className={styles.nextValue}>
-                                            {series.nextToWatch ? formatEpisodeName(series.nextToWatch) : 'SISTEMA_COMPLETO'}
+                                            {series.nextToWatch ? formatEpisodeName(series.nextToWatch) : 'COMPLETO'}
                                         </span>
                                     </div>
                                     <button 
                                         className={styles.playBtnCyber} 
-                                        onClick={() => series.nextToWatch && onPlayNext(`${series.folder}/${series.nextToWatch}`, series.disk, false)}
+                                        onClick={() => onPlayNext(`${series.folder}/${series.nextToWatch}`, series.aliasRoute)}
                                         disabled={!series.nextToWatch}
-                                        aria-label="Reproducir siguiente"
                                     >
-                                        <span className={styles.playIcon}>▶</span> REPRODUCIR
+                                        REPRODUCIR
                                     </button>
                                 </div>
                             </div>
@@ -179,7 +154,7 @@ const MediaDetails = ({ series, onPlayNext }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </section>
     );
 };
 

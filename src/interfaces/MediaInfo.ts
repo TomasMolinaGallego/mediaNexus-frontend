@@ -1,5 +1,5 @@
 export interface MediaInfo {
-    disk: string;
+    aliasRoute: string;
     frameUrl: string;
     status: string;
 }

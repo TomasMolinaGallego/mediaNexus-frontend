@@ -1,11 +1,11 @@
 .heroContainer {
     position: relative;
     width: 100%;
-    min-height: 480px;
+    min-height: 500px;
+    background-color: #050505;
     display: flex;
     align-items: center;
-    overflow: hidden;
-    background-color: #050505;
+    padding: 60px 0; /* Espacio para el header fijo */
 }
 
 .heroBackdrop {
@@ -13,8 +13,8 @@
     inset: 0;
     background-size: cover;
     background-position: center 20%;
-    opacity: 0.2;
-    filter: blur(25px) saturate(1.5);
+    opacity: 0.15;
+    filter: blur(40px) saturate(2);
     z-index: 1;
 }
 
@@ -22,26 +22,24 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 40px;
+    padding: 0 40px;
 }
 
 .flexRow {
     display: flex;
-    gap: 50px;
-    min-height: 400px;
-    animation: fadeInHero 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    gap: 40px;
+    animation: fadeInHero 0.8s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
 .posterSide {
-    width: 260px;
-    height: 380px;
+    width: 240px;
+    height: 350px;
     flex-shrink: 0;
-    border: 1px solid rgba(229, 9, 20, 0.5);
     position: relative;
-    background: #111;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .miniPoster { width: 100%; height: 100%; object-fit: cover; }
@@ -52,78 +50,121 @@
     right: -10px;
     background: #e50914;
     color: white;
-    padding: 5px 15px;
+    padding: 4px 12px;
     font-weight: 900;
+    font-size: 0.8rem;
     transform: skewX(-15deg);
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.5);
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
 }
 
 .textSide {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    min-width: 0;
 }
 
 .title {
-    font-size: clamp(1.8rem, 5vw, 3.5rem); /* Tamaño fluido */
-    font-weight: 950;
-    margin: 10px 0;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
     color: white;
+    line-height: 0.9;
+    margin: 15px 0;
     text-transform: uppercase;
-    letter-spacing: -1px;
-    line-height: 0.95;
 }
 
-.metaRow { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-.cyberBadge { font-size: 0.6rem; color: #e50914; border: 1px solid #e50914; padding: 2px 6px; font-weight: 900; }
-.genreRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-.genreItem { color: #666; font-size: 0.7rem; font-weight: 700; }
+.cyberBadge {
+    font-size: 0.6rem;
+    color: #e50914;
+    border: 1px solid #e50914;
+    padding: 2px 8px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
 
 .descriptionContainer {
-    max-height: 120px;
-    overflow: hidden;
-    margin-bottom: 25px;
-    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    margin-bottom: 30px;
+    max-width: 800px;
 }
 
-.scrollContent { height: 100%; overflow-y: auto; padding-right: 10px; }
-.descriptionText { color: #aaa; line-height: 1.5; font-size: 0.9rem; margin: 0; }
+.descriptionText {
+    color: #bbb;
+    line-height: 1.6;
+    font-size: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 
-.actionFooter { margin-top: auto; display: flex; flex-direction: column; gap: 15px; }
-.progressTrack { height: 4px; background: #1a1a1a; border-radius: 2px; }
-.progressBar { height: 100%; background: #e50914; box-shadow: 0 0 10px #e50914; }
+.actionFooter {
+    margin-top: auto;
+    background: rgba(255,255,255,0.03);
+    padding: 20px;
+    border-radius: 4px;
+    border-left: 4px solid #e50914;
+}
+
+.progressInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.progressTrack { height: 4px; background: #1a1a1a; margin-bottom: 20px; }
+.progressBar { height: 100%; background: #e50914; box-shadow: 0 0 15px rgba(229, 9, 20, 0.4); }
 
 .playInterface {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255,255,255,0.02);
-    padding: 15px;
-    border-left: 4px solid #e50914;
+    gap: 20px;
+}
+
+.nextValue {
+    display: block;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .playBtnCyber {
-    background: #fff;
-    color: #000;
+    background: #e50914;
+    color: white;
     border: none;
-    padding: 12px 30px;
+    padding: 14px 40px;
     font-weight: 900;
     cursor: pointer;
     clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+    transition: all 0.3s ease;
 }
 
-/* --- RESPONSIVE MEDIA DETAILS --- */
+.playBtnCyber:hover:not(:disabled) {
+    background: #fff;
+    color: #000;
+    transform: scale(1.05);
+}
+
+.playBtnCyber:disabled {
+    background: #222;
+    color: #444;
+    cursor: not-allowed;
+}
+
+/* --- RESPONSIVE --- */
 @media (max-width: 850px) {
-    .flexRow { flex-direction: column; height: auto; align-items: center; gap: 30px; }
-    .heroContent { padding: 80px 20px 40px; } /* Espacio para el header */
-    .posterSide { width: 200px; height: 300px; margin-top: 0; }
-    .textSide { align-items: center; text-align: center; width: 100%; }
-    .playInterface { flex-direction: column; gap: 15px; width: 100%; }
-    .playBtnCyber { width: 100%; clip-path: none; }
-}
-
-@keyframes fadeInHero {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    .heroContainer { padding: 100px 0 40px; }
+    .flexRow { flex-direction: column; align-items: center; text-align: center; }
+    .posterSide { width: 180px; height: 260px; }
+    .textSide { width: 100%; }
+    .descriptionText { -webkit-line-clamp: 3; }
+    .playInterface { flex-direction: column; }
+    .playBtnCyber { width: 100%; clip-path: none; border-radius: 8px; }
+    .nextInfo { text-align: center; }
 }

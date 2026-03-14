@@ -4,14 +4,15 @@ import Header from './components/layout/header/Header';
 import MediaList from './components/common/mediaList/MediaList';
 import Sidebar from './components/layout/sidebar/SideBar';
 import MediaDetails from './components/common/mediaDetails/MediaDetails';
+import VideoPlayer from './components/common/videoPlayer/VideoPlayer';
 import ConfigurationPanel from './components/layout/configurationPanel/ConfigurationPanel.jsx';
 import { useMediaHooksManager } from './hooks/mediaHooksManager.ts';
 
 const FILTER_STATUSES = ['Todos', 'Viendo', 'Pendiente', 'Completado', 'Abandonado'];
 
 function App() {
-  // Estado para controlar si mostramos la biblioteca o la configuración
   const [showSettings, setShowSettings] = useState(false);
+  const [playingMedia, setPlayingMedia] = useState(null);
 
   const {
     displayData, isInsideMedia, isLoading, filteredStatus,
@@ -19,7 +20,16 @@ function App() {
     handleToggleWatched, currentMedia, lastWatchedEpisode, openVlc, statusStats
   } = useMediaHooksManager();
 
-  // Función para volver a la biblioteca y cerrar ajustes
+  const onMediaClick = (path, alias) => {
+    if (isInsideMedia) {
+        // Si ya estamos dentro y es un archivo, buscamos el objeto media
+        const mediaObj = displayData.find(m => m.title === path.split('/').pop());
+        setPlayingMedia(mediaObj);
+    } else {
+        handleMediaClick(path, alias);
+    }
+  };
+
   const navigateToLibrary = () => {
     setShowSettings(false);
   };
@@ -31,6 +41,12 @@ function App() {
 
   return (
     <div className={styles.appContainer}>
+      {playingMedia && (
+        <VideoPlayer 
+          media={playingMedia} 
+          onClose={() => setPlayingMedia(null)} 
+        />
+      )}
       <Sidebar
         onStatusFilter={setFilteredStatus}
         activeStatus={filteredStatus}
@@ -56,7 +72,6 @@ function App() {
         />
 
         <div className={styles.scrollableArea}>
-          {/* RENDER CONDICIONAL: CONFIGURACIÓN O BIBLIOTECA */}
           {showSettings ? (
             <div className={styles.configWrapper}>
                <ConfigurationPanel />
@@ -66,7 +81,7 @@ function App() {
               {isInsideMedia && currentMedia && (
                 <MediaDetails
                   series={currentMedia}
-                  onPlayNext={handleMediaClick}
+                  onPlayNext={onMediaClick}
                 />
               )}
 
@@ -77,7 +92,7 @@ function App() {
 
                 <MediaList
                   medias={displayData}
-                  handleClick={handleMediaClick}
+                  handleMediaClick={onMediaClick}
                   isInsideMedia={isInsideMedia}
                   onToggleWatched={isInsideMedia ? handleToggleWatched : undefined}
                   isLoading={isLoading}

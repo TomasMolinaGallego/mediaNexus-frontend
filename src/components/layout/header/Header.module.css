@@ -1,20 +1,19 @@
 .header {
-  background: rgba(10, 10, 10, 0.98);
-  backdrop-filter: blur(10px);
-  padding: 1rem 0;
+  background: #0a0a0a;
   border-bottom: 1px solid #1a1a1a;
   position: sticky;
   top: 0;
   z-index: 1000;
+  padding: 1rem 0;
 }
 
 .headerContent {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .topRow {
@@ -23,129 +22,339 @@
   align-items: center;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .title {
   color: #fff;
-  margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 900;
-  text-transform: uppercase;
   letter-spacing: -1px;
+  margin: 0;
   cursor: pointer;
 }
 
 .title span {
-  color: #e50914; /* Rojo característico */
+  color: #e50914;
 }
 
-.menuToggle {
-  display: none; /* Se activa en media query */
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
+.settingsBtn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-}
-
-.controls {
+  transition: all 0.2s;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  justify-content: center;
 }
 
-/* --- Search Bar --- */
+.settingsBtn:hover {
+  border-color: #e50914;
+  color: #e50914;
+  transform: rotate(45deg);
+}
+
+/* Buscador y Botón Volver */
+.controlsRow {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .searchWrapper {
   position: relative;
   flex: 1;
-  max-width: 500px;
+  max-width: 600px;
 }
 
 .searchBar {
   width: 100%;
-  padding: 12px 15px 12px 45px;
-  border-radius: 4px;
-  border: 1px solid #222;
   background: #141414;
-  color: white;
+  border: 1px solid #222;
+  color: #fff;
+  padding: 0.8rem 1rem 0.8rem 2.8rem;
+  border-radius: 6px;
   font-size: 0.9rem;
-  outline: none;
-  transition: all 0.2s;
+  transition: border-color 0.3s;
 }
 
 .searchBar:focus {
   border-color: #e50914;
-  background: #1a1a1a;
+  outline: none;
 }
 
 .searchIcon {
   position: absolute;
-  left: 15px;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.5;
-}
-
-/* --- Filtros --- */
-.filters {
-  display: flex;
-  gap: 8px;
-}
-
-.filterButton {
-  background: #1a1a1a;
-  color: #888;
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: 1px solid #222;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.filterButton:hover {
-  color: #fff;
-  background: #222;
-}
-
-.active {
-  background: #e50914;
-  color: #fff;
-  border-color: #e50914;
-  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+  opacity: 0.4;
 }
 
 .backButton {
-  background: #222 !important;
-  color: white;
+  background: #e50914;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
   font-weight: 800;
-  letter-spacing: 1px;
-}
-
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-  .menuToggle { display: block; }
-  .placeholder { width: 30px; }
-  .headerContent { padding: 0 1.5rem; }
+  font-size: 0.75rem;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
-  .controls {
+  .controlsRow {
     flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
+    align-items: stretch;
   }
-  
-  .searchWrapper { max-width: 100%; }
-  
-  .filters {
-    width: 100%;
-    overflow-x: auto;
-    padding-bottom: 5px;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.modalContent {
+  background: #111;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  border-radius: 12px;
+  border: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modalHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h2 {
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.scrollArea {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Tarjeta individual por cada directorio */
+.directoryCard {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #222;
+  padding-bottom: 0.5rem;
+}
+
+.rowNumber {
+  color: #e50914;
+  font-weight: 900;
+  font-size: 0.8rem;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr 100px; /* Alias y Disco */
+  gap: 1rem;
+}
+
+.fullWidth {
+  grid-column: span 2; /* La ruta ocupa todo el ancho */
+}
+
+/* Inputs del Modal */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-size: 0.65rem;
+  color: #888;
+  font-weight: 800;
+}
+
+.modalBody {
+  padding: 1.5rem;
+  display: flex;         /* Activamos flex para centrar hijos */
+  flex-direction: column;
+  overflow: hidden;      /* Evita desbordes internos */
+}
+
+.modalBody input {
+  background: #000;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.modalBody input:focus {
+  border-color: #e50914;
+  outline: none;
+}
+
+.pathWrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pathInput {
+  flex: 1;
+  font-family: monospace;
+}
+
+/* Botones de acción */
+.addBtn {
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: 2px dashed #333;
+  color: #888;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.addBtn:hover {
+  border-color: #e50914;
+  color: #fff;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.removeBtn:hover {
+  color: #e50914;
+}
+
+.modalFooter {
+  padding: 1.5rem;
+  border-top: 1px solid #222;
+}
+
+.saveButton {
+  width: 100%;
+  background: #e50914;
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 6px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveButton:hover {
+  background: #b20710;
+}
+
+/* Responsivo para el grid interno de la tarjeta */
+@media (max-width: 480px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
   }
-  
-  .filters::-webkit-scrollbar { display: none; }
+  .fullWidth {
+    grid-column: span 1;
+  }
+}
+
+.infoBanner {
+  background: #1a1a1a;
+  padding: 12px;
+  border-radius: 6px;
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  border: 1px solid #222;
+  text-align: center;    /* Texto centrado */
+  width: 100%;           /* Ocupa el ancho disponible */
+  box-sizing: border-box; /* IMPORTANTE: incluye el padding en el ancho */
+}
+
+/* Botón Añadir Ruta */
+.addBtn {
+  width: 100%;
+  box-sizing: border-box; /* Evita que se salga del modal */
+  padding: 1rem;
+  background: none;
+  border: 2px dashed #333;
+  color: #888;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  display: block;        /* Asegura comportamiento de bloque */
+  transition: all 0.2s;
+}
+
+.addBtn:hover {
+  border-color: #e50914;
+  color: #fff;
+  background: rgba(229, 9, 20, 0.05);
+}
+
+/* Footer y Botón Guardar */
+.modalFooter {
+  padding: 1.5rem;
+  border-top: 1px solid #222;
+  display: flex;
+  justify-content: center; /* Centra el contenido internamente */
+}
+
+.saveButton {
+  width: 100%;
+  max-width: 100%;        /* No permite que supere al padre */
+  box-sizing: border-box;  /* Evita el desborde por padding */
+  background: #e50914;
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 6px;
+  font-weight: 900;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

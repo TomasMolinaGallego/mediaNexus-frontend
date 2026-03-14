@@ -18,7 +18,7 @@ const ConfigurationPanel = () => {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const res = await fetch('http://localhost:3001/api/config');
+                const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/config`);
                 if (res.ok) {
                     const data = await res.json();
                     setConfig(data);
@@ -47,7 +47,7 @@ const ConfigurationPanel = () => {
     const handleSave = async () => {
         setStatus({ message: 'Guardando...', type: 'info' });
         try {
-            const res = await fetch('http://localhost:3001/api/config', {
+            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/config`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(config)

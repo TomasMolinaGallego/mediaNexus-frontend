@@ -1,92 +1,60 @@
 import React, { memo, useMemo } from 'react';
 import styles from './MediaCard.module.css';
+import MediaUtils from '../../../utils/MediaUtils.jsx';
 
-/**
- * Configuration constant for asset hosting.
- * In a production environment, this should be moved to an .env file.
- */
-const ASSET_URL = 'http://localhost:3001';
+const PLACEHOLDER = '/placeholder.png'; // Asegúrate de tener esta imagen en public/
 
-/**
- * Utility to clean media titles and extract episode metadata.
- * Separating this logic from the component body ensures better testability.
- * * @param {string} rawTitle - The original filename or series title.
- * @returns {Object} { seriesName: string, episodeNum: string | null }
- */
-const parseMediaTitle = (rawTitle) => {
-  if (!rawTitle) return { seriesName: 'Unknown Title', episodeNum: null };
-
-  // Clean extensions, tags [brackets], and metadata (parentheses)
-  let clean = rawTitle
-    .replace(/\[.*?\]/g, '')       
-    .replace(/\(.*?\)/g, '')       
-    .replace(/\.[^/.]+$/, "")      
-    .replace(/_/g, ' ')            
-    .replace(/\s\s+/g, ' ')        
-    .trim();
-
-  // Regex to capture numeric episodes at the end of the string
-  const epRegex = /(?:.*[\s\-\_eE]|capitulo\s|cap\.\s|ep\.\s)(\d+)$/i;
-  const match = clean.match(epRegex);
-
-  if (match) {
-    const episodeNum = match[1];
-    const seriesName = clean.substring(0, clean.lastIndexOf(episodeNum))
-                            .replace(/[\s\-\_]+$/, '') 
-                            .trim();
-    return { seriesName, episodeNum };
-  }
-
-  return { seriesName: clean, episodeNum: null };
-};
-
-/**
- * MediaCard Component
- * Represents a single series or episode in the library grid.
- * * @param {Object} props
- * @param {Object} props.media - The media data object (title, image, disk, etc.)
- * @param {Function} props.onClick - Handler for card selection (Navigate or Play)
- * @param {boolean} props.isInsideMedia - UI Context: True if browsing episodes of a series
- * @param {Function} props.onToggleWatched - Action to change the watched status
- */
-const MediaCard = memo(({ media, onClick, isInsideMedia, onToggleWatched }) => {
+const MediaCard = memo(({ media, handleMediaClick, isInsideMedia, onToggleWatched }) => {
   
-  // Memoize parsing logic to prevent heavy regex execution on every re-render
+  // Parseo del título (Memoizado para rendimiento)
   const { seriesName, episodeNum } = useMemo(() => 
-    parseMediaTitle(media.title), [media.title]
+    MediaUtils.parseMediaTitle(media.title), [media.title]
   );
 
-  /**
-   * Handles navigation/playback logic based on the current view context.
-   */
   const handleCardClick = () => {
-    // Determine the full path based on whether we are at root or inside a folder
-    const path = isInsideMedia ? `${media.folder}/${media.title}` : media.title;
-    console.log("disk en MediaCard:", media);
-    onClick(path, media.disk, true); 
+    // Limpiamos la construcción de la ruta para evitar dobles barras
+    const path = isInsideMedia 
+      ? `${media.folder}/${media.title}`.replace(/\/+/g, '/') 
+      : media.title;
+    
+    handleMediaClick(path, media.aliasRoute, true); 
   };
 
-  /**
-   * Prevents event bubbling to the card click when clicking the status button.
-   */
+  // Soporte para accesibilidad (Click con teclado)
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   const handleToggle = (e) => {
     e.stopPropagation();
     onToggleWatched?.(media, !media.watched);
   };
 
   return (
-    <article className={styles.card} onClick={handleCardClick}>
+    <article 
+      className={styles.card} 
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={0} // Permite navegar con el tabulador
+      role="button"
+      aria-label={`Ver ${seriesName || media.title}`}
+    >
       <div className={styles.imageArea}>
         <img 
-          src={`${ASSET_URL}${media.image}`} 
-          alt={seriesName} 
+          src={media.image ? `${process.env.REACT_APP_BACKEND_URL}${media.image}` : PLACEHOLDER} 
+          alt={seriesName || media.title} 
           className={`${styles.image} ${media.watched ? styles.watchedImage : ''}`}
           loading="lazy"
-          // Fallback image handling
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/350x200?text=No+Thumbnail'; }}
+          onError={(e) => { 
+            e.currentTarget.onerror = null; // Evita bucle infinito si el placeholder también falla
+            e.currentTarget.src = PLACEHOLDER; 
+          }}
         />
 
-        {/* Dynamic Badges */}
+        {/* Badge de Episodio */}
         {episodeNum && (
           <div className={styles.episodeBadge}>
             <span className={styles.epPrefix}>EP</span>
@@ -94,8 +62,9 @@ const MediaCard = memo(({ media, onClick, isInsideMedia, onToggleWatched }) => {
           </div>
         )}
 
+        {/* Check de Visto (UI superior) */}
         {media.watched && (
-          <div className={styles.watchedIndicator} aria-label="Watched">
+          <div className={styles.watchedIndicator} aria-hidden="true">
             ✔
           </div>
         )}
@@ -104,24 +73,26 @@ const MediaCard = memo(({ media, onClick, isInsideMedia, onToggleWatched }) => {
       <div className={styles.contentArea}>
         <div className={styles.titleContainer}>
           <h3 className={styles.seriesName} title={media.title}>
-            {seriesName || `Episode ${episodeNum}`}
+            {seriesName || `Episodio ${episodeNum}`}
           </h3>
         </div>
         
         <div className={styles.footer}>
           {!isInsideMedia ? (
-            <span className={styles.statusTag}>{media.status || 'Library'}</span>
+            <span className={styles.statusTag}>{media.status || 'Biblioteca'}</span>
           ) : (
             <button 
               className={`${styles.watchBtn} ${media.watched ? styles.active : ''}`}
               onClick={handleToggle}
+              aria-pressed={media.watched}
+              tabIndex={-1}
             >
-              {media.watched ? 'Watched' : 'Mark seen'}
+              {media.watched ? 'Visto' : 'Marcar visto'}
             </button>
           )}
           
-          <div className={styles.diskBadge}>
-            <span>DISK {media.disk}</span>
+          <div className={styles.diskBadge} title={`Ubicación: Disco ${media.disk}`}>
+            <span>DISCO {media.disk || '?'}</span>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 
 export interface SeriesInfo {
     title: string;
-    disk: string;
+    aliasRoute: string;
     image: string;
     status: string;
 }

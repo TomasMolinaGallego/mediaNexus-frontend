@@ -18,7 +18,7 @@ export const mediaMapper = {
         title,
         aliasRoute: firstItem.aliasRoute ?? 'Unknown',
         image: firstItem.frameUrl ?? '',
-        status: 'Pendiente',
+        status: 'Todos', // Placeholder, should be set based on actual data
       };
     });
   }

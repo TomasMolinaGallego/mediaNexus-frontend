@@ -3,8 +3,6 @@ import styles from './ReplaySection.module.css';
 import { FiPlayCircle, FiActivity, FiClock } from 'react-icons/fi';
 import MediaUtils from '../../../utils/MediaUtils.jsx';
 
-const ASSET_URL = 'http://localhost:3001'; // Ajusta según tu config
-
 const ReplaySection = ({ onClickLastWatched, lastWatched }) => {
   
   // Calculamos todos los datos derivados en un solo paso

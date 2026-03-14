@@ -2,8 +2,6 @@ import React, { memo, useMemo } from 'react';
 import styles from './MediaCard.module.css';
 import MediaUtils from '../../../utils/MediaUtils.jsx';
 
-// Idealmente esto vendría de un .env: process.env.REACT_APP_ASSET_URL
-const ASSET_URL = 'http://localhost:3001';
 const PLACEHOLDER = '/placeholder.png'; // Asegúrate de tener esta imagen en public/
 
 const MediaCard = memo(({ media, handleMediaClick, isInsideMedia, onToggleWatched }) => {
@@ -46,7 +44,7 @@ const MediaCard = memo(({ media, handleMediaClick, isInsideMedia, onToggleWatche
     >
       <div className={styles.imageArea}>
         <img 
-          src={media.image ? `${ASSET_URL}${media.image}` : PLACEHOLDER} 
+          src={media.image ? `${process.env.REACT_APP_BACKEND_URL}${media.image}` : PLACEHOLDER} 
           alt={seriesName || media.title} 
           className={`${styles.image} ${media.watched ? styles.watchedImage : ''}`}
           loading="lazy"

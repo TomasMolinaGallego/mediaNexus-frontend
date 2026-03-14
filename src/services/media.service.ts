@@ -8,7 +8,6 @@ export const mediaService = {
   fetchAll: async () => {
     try {
       const data = await httpClient.get<any>('/media/files');
-      console.log(mediaMapper.toSeriesList(data))
       return mediaMapper.toSeriesList(data);
     } catch (error) {
       console.error('[MediaService] Error al cargar series:', error);

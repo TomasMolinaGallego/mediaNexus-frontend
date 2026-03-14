@@ -4,7 +4,6 @@ import styles from './MediaDetails.module.css';
 /**
  * API base URL - Ideally from an environment variable.
  */
-const API_BASE_URL = 'http://localhost:3001';
 
 /**
  * Utility to clean file names for display.
@@ -43,7 +42,7 @@ const MediaDetails = ({ series, onPlayNext }) => {
         setLoading(true);
         
         try {
-            const response = await fetch(`${API_BASE_URL}/api/media/metadata/${encodeURIComponent(searchTitle)}`, { 
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/media/metadata/${encodeURIComponent(searchTitle)}`, { 
                 signal: controller.signal 
             });
             if (!response.ok) throw new Error('Metadata error');

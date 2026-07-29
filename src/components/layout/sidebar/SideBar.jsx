@@ -54,7 +54,7 @@ const SideBar = memo(({ onStatusFilter, activeStatus, stats, lastWatched, disks,
   // Fetch de descargas con manejo de errores limpio
   const fetchDownloads = useCallback(async () => {
     try {
-      const { data } = await axios.get('http://localhost:3001/api/qbit/status/downloads');
+      const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/qbit/status/downloads`);
       const activeDls = data.filter(t => 
         ['downloading', 'stalledDL', 'metaDL', 'queuedDL'].includes(t.status)
       );

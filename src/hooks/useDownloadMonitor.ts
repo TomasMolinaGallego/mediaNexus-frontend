@@ -14,7 +14,7 @@ export const useDownloadMonitor = (currentSerie, medias, refreshMedia) => {
     const interval = setInterval(async () => {
       try {
         attempts++;
-        const { data } = await axios.get(`http://localhost:3001/api/sonarr/series/${seriesId}`);
+        const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/sonarr/series/${seriesId}`);
         const currentCount = data.filter((ep: any) => ep.hasFile).length;
 
         if (currentCount > initialCount) {
@@ -32,7 +32,7 @@ export const useDownloadMonitor = (currentSerie, medias, refreshMedia) => {
 
   const checkDownloads = useCallback(async () => {
     try {
-      const { data } = await axios.get('http://localhost:3001/api/qbit/status/downloads');
+      const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/qbit/status/downloads`);
       const currentMap = new Map(data.map(t => [t.hash, t]));
 
       data.forEach(async torrent => {

@@ -1,8 +1,10 @@
 
 export interface EpisodeDTO {
-    fullName: string;
+    episodeName: string;
     frameUrl: string;
-    folder: string;
+    seriesName: string;
     aliasRoute: string;
-    watched: boolean;
+    isEpisodeWatched: boolean;
+    episodeNumber?: number;
+    seasonNumber?: number;
 }

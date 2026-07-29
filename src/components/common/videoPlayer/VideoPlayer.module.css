@@ -1,109 +1,273 @@
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.closeBtn {
-    position: absolute;
-    top: 20px;
-    right: 40px;
-    background: rgba(229, 9, 20, 0.8);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    z-index: 10000;
-    transition: background 0.2s;
-}
+.hideCursor { cursor: none; }
 
-.closeBtn:hover {
-    background: #e50914;
-}
-
-.playerWrapper {
-    width: 90%;
-    max-width: 1200px;
-    aspect-ratio: 16 / 9;
-    background: #000;
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+.videoWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .videoElement {
-    width: 100%;
-    height: 100%;
-    outline: none;
+  width: 100%;
+  max-height: 100vh;
 }
 
-.playerContainer {
-    position: relative;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
+/* CONTROLES */
+.controlsContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 40px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  z-index: 10;
 }
 
-.customControls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 15px;
-    z-index: 10;
+.controlsContainer.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.subSelectorWrapper {
-    position: relative;
+/* BARRA DE PROGRESO */
+.progressArea {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-.settingsBtn {
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    border: 1px solid #444;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
+.progressBase {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  position: relative;
+  transition: height 0.2s;
 }
 
-.subList {
-    position: absolute;
-    bottom: 110%;
-    right: 0;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    list-style: none;
-    padding: 10px 0;
-    border-radius: 8px;
-    min-width: 150px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+.progressArea:hover .progressBase { height: 8px; }
+
+.progressBar {
+  height: 100%;
+  background: var(--accent);
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-shadow: 0 0 10px var(--accent);
 }
 
-.subList li {
-    padding: 8px 20px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #ccc;
+.progressKnob {
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s;
 }
 
-.subList li:hover {
-    background: #e50914;
-    color: white;
+.progressArea:hover .progressKnob { transform: translate(-50%, -50%) scale(1); }
+
+/* FILA DE BOTONES */
+.buttonsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
 }
 
-.subList li.active {
-    color: #e50914;
-    font-weight: bold;
+.leftBtns, .rightBtns {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-.subList li.active:hover {
-    color: white;
+.buttonsRow button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.buttonsRow button:hover { color: var(--accent); }
+
+.timeDisplay {
+  font-family: 'monospace';
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.centerTitle {
+  font-size: 0.9rem;
+  color: #eee;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.closeBtn.show { opacity: 1; }
+
+/* Contenedor de Volumen */
+.volumeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volumeSlider {
+  width: 0;
+  opacity: 0;
+  transition: width 0.3s, opacity 0.3s;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.volumeWrapper:hover .volumeSlider {
+  width: 80px;
+  opacity: 1;
+}
+
+/* Selector de Subtítulos */
+.subtitleWrapper {
+  position: relative;
+}
+
+.subtitleMenu {
+  position: absolute;
+  bottom: 150%;
+  right: 0;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius);
+  list-style: none;
+  padding: 10px 0;
+  min-width: 120px;
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.2s ease;
+}
+
+.subtitleMenu li {
+  padding: 8px 15px;
+  font-size: 0.85rem;
+  color: #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.subtitleMenu li:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Animación para el menú */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilo para los botones en general */
+.leftBtns button, .rightBtns button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.1s;
+}
+
+.leftBtns button:active {
+  transform: scale(0.9);
+}
+.overlay:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+}
+
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Mantiene la proporción del anime sin deformar */
+}
+
+/* AJUSTES POR TEMA */
+[data-theme='nier'] .progressBase { border-radius: 0; }
+[data-theme='nier'] .progressKnob { border-radius: 0; width: 4px; height: 15px; }
+[data-theme='tactical'] .progressBar { filter: drop-shadow(0 0 5px var(--accent)); }
+
+
+/* Estilo base para todos los temas */
+.videoElement::cue {
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 3.5rem;
+  /* El borde del texto ayuda a la lectura */
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+}
+
+/* --- Personalización por TEMAS --- */
+
+/* Tema Tactical: Texto cian con resplandor neón */
+[data-theme='tactical'] .videoElement::cue {
+  color: #00f2ff;
+  text-shadow: 0 0 8px rgba(0, 242, 255, 0.8);
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Tema NieR: Texto sepia, estilo vintage, sin fondo negro */
+[data-theme='nier'] .videoElement::cue {
+  background: transparent;
+  color: #dad4bb;
+  font-family: 'Times New Roman', serif;
+  font-weight: bold;
+  text-decoration: underline; /* Estilo muy japonés clásico */
+}
+
+/* Tema Cyber-Terminal: Fuente monoespaciada verde */
+[data-theme='terminal'] .videoElement::cue {
+  background: #000;
+  color: #33ff33;
+  font-family: 'Courier New', monospace;
 }

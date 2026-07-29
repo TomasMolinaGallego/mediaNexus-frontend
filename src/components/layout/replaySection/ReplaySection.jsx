@@ -11,7 +11,6 @@ const ReplaySection = ({ onClickLastWatched, lastWatched }) => {
 
     const { seriesName, episodeNum: epNext } = MediaUtils.parseMediaTitle(lastWatched.nextEpisodeToWatch);
     const { episodeNum: epLast } = MediaUtils.parseMediaTitle(lastWatched.lastEpisodeWatched);
-
     return {
       name: seriesName,
       lastEpNum: epLast,
@@ -23,6 +22,7 @@ const ReplaySection = ({ onClickLastWatched, lastWatched }) => {
   }, [lastWatched]);
 
   const handleNavigation = (targetEpisode) => {
+    console.log('Navigating to episode:', mediaData);
     if (targetEpisode) {
       onClickLastWatched(targetEpisode, lastWatched.aliasRoute, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -44,7 +44,7 @@ const ReplaySection = ({ onClickLastWatched, lastWatched }) => {
 
       <article 
         className={styles.lastWatchedCard} 
-        onClick={() => handleNavigation(mediaData.fullNextEp)}
+        onClick={() => handleNavigation(mediaData.fullLastEp)}
         title={`Reproducir ${mediaData.name}`}
       >
         <div className={styles.imageWrapper}>
@@ -66,7 +66,7 @@ const ReplaySection = ({ onClickLastWatched, lastWatched }) => {
           className={styles.primaryAction} 
           onClick={() => handleNavigation(mediaData.fullLastEp)}
         >
-          <FiClock size={14} /> Repetir {mediaData.lastEpNum.replace('Episodio ', 'E')}
+          <FiClock size={14} /> Repetir {mediaData.lastEpNum?.replace('Episodio ', 'E')}
         </button>
 
         <button 

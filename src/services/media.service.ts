@@ -15,7 +15,7 @@ export const mediaService = {
     }
   },
 
-  loadEpisodes: async (title: string, aliasRoute: number): Promise<MediaItem[]> => {
+  loadEpisodes: async (title: string, aliasRoute: string): Promise<MediaItem[]> => {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), 8000);
 
@@ -23,7 +23,6 @@ export const mediaService = {
       const url = `/media/files/${encodeURIComponent(title)}/${aliasRoute}`;
       const rawData = await httpClient.get<any>(url, { signal: controller.signal });
       clearTimeout(id);
-      
       const rawEpisodes = Array.isArray(rawData) ? rawData : (rawData?.episodes ?? []);
       return rawEpisodes.map(mediaMapper.toMediaItem);
     } catch (error) {
@@ -70,6 +69,15 @@ export const mediaService = {
     try {
       await httpClient.post('/config/folders', folders);
       return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  },
+
+  getAllSeriesExternal: async () => {
+    try {
+      const data = await httpClient.get<any>('/sonarr/series');
+      return { success: true, data };
     } catch (error: any) {
       return { success: false, error: error.message };
     }

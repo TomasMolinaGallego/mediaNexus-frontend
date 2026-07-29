@@ -4,11 +4,13 @@ import { SeriesInfo } from "../interfaces/SeriesInfo";
 
 export const mediaMapper = {
   toMediaItem: (item: Partial<EpisodeDTO>): MediaItem => ({
-    title: item.fullName ?? 'Episodio desconocido',
+    title: item.episodeName ?? 'Episodio desconocido',
     image: item.frameUrl ?? '/placeholder.png',
-    folder: item.folder ?? '',
+    folder: item.seriesName ?? '',
     aliasRoute: String(item.aliasRoute) ?? '0',
-    watched: Boolean(item.watched)
+    watched: Boolean(item.isEpisodeWatched),
+    episodeNumber: item.episodeNumber,
+    seasonNumber: item.seasonNumber,
   }),
 
   toSeriesList: (data: Record<string, EpisodeDTO[]>): SeriesInfo[] => {

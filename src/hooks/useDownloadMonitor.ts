@@ -32,6 +32,7 @@ export const useDownloadMonitor = (currentSerie, medias, refreshMedia) => {
 
   const checkDownloads = useCallback(async () => {
     try {
+      return;
       const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/qbit/status/downloads`);
       const currentMap = new Map(data.map(t => [t.hash, t]));
 

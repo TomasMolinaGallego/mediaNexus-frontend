@@ -1,0 +1,127 @@
+.gameContainer {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #e0e0e0;
+  cursor: none;
+  font-family: 'Share Tech Mono', monospace;
+  user-select: none;
+}
+
+.uiOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: 40px;
+}
+
+.stats {
+  font-size: 14px;
+  color: #454138;
+  letter-spacing: 1px;
+}
+
+.messageLog {
+  position: absolute;
+  bottom: 60px;
+  left: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.msg {
+  font-size: 12px;
+  color: #454138;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 6px 12px;
+  border-left: 2px solid #454138;
+  animation: slideIn 0.3s ease-out;
+}
+
+.dialogOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(224, 224, 224, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  backdrop-filter: blur(5px);
+}
+
+.yorhaDialog {
+  background: #dcdadb;
+  border: 1px solid #454138;
+  padding: 3px;
+  width: 480px;
+  box-shadow: 15px 15px 0px rgba(0,0,0,0.05);
+}
+
+.innerBorder {
+  border: 1px solid #454138;
+  padding: 35px;
+}
+
+.dialogText {
+  color: #454138;
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 35px;
+  text-transform: uppercase;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.yorhaButton {
+  background: #454138;
+  color: #e0e0e0;
+  border: none;
+  padding: 12px 30px;
+  font-family: 'Share Tech Mono';
+  cursor: pointer;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
+  transition: background 0.2s;
+}
+
+.yorhaButton:hover {
+  background: #1a1a1a;
+}
+
+.yorhaButtonSecondary {
+  background: transparent;
+  color: #454138;
+  border: 1px solid #454138;
+  padding: 12px 30px;
+  font-family: 'Share Tech Mono';
+  cursor: pointer;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.dialogOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(224, 224, 224, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: auto !important; 
+  pointer-events: all !important;
+  /* ----------------- */
+  backdrop-filter: blur(5px);
+  z-index: 20; /* Asegúrate de que esté por encima de todo */
+}
+
+/* Opcional: Para que los botones se sientan más "YoRHa" al pasar el ratón */
+.yorhaButton:hover, .yorhaButtonSecondary:hover {
+  cursor: pointer;
+}

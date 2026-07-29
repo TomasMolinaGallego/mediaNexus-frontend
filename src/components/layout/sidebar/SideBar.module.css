@@ -162,3 +162,365 @@
   scrollbar-width: none;
 }
 .navGroup::-webkit-scrollbar { display: none; }
+
+/* Estilos de Descargas */
+.downloadList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.downloadItem {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.dlHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  margin-bottom: 4px;
+}
+
+.dlName {
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.dlPercent { color: #e50914; font-weight: bold; }
+
+.dlBarBg {
+  height: 3px;
+  background: #1a1a1a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.dlBarFill {
+  height: 100%;
+  background: #e50914;
+  transition: width 0.3s ease;
+}
+
+.dlFooter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  color: #555;
+  margin-top: 4px;
+}
+
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: var(--side-bg);
+  border-right: 1px solid var(--side-border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  font-family: var(--font-family);
+}
+
+.collapsed {
+  width: 75px;
+}
+
+.toggleBtn {
+  position: absolute;
+  top: 30px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--side-accent);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1200;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s;
+  clip-path: var(--clip-path); /* Aplicamos el recorte de tema si existe */
+}
+
+.logoIcon {
+  width: 35px;
+  height: 35px;
+  background: var(--side-accent);
+  color: #fff;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  flex-shrink: 0;
+  clip-path: var(--clip-path);
+}
+
+.navItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 12px 25px;
+  gap: 15px;
+  cursor: pointer;
+  color: var(--side-text);
+  transition: all 0.2s;
+  outline: none;
+}
+
+.navItem:hover, .navItem:focus-visible {
+  color: var(--side-text-active);
+  background: var(--side-item-hover);
+}
+
+.active {
+  color: var(--side-text-active);
+  background: var(--side-item-hover);
+}
+
+.activeIndicator {
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 3px;
+  background: var(--side-accent);
+  box-shadow: 0 0 10px var(--side-accent);
+}
+
+.badge {
+  background: var(--side-badge-bg);
+  color: var(--side-text);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  margin-left: auto;
+}
+
+.active .badge {
+  background: var(--side-accent);
+  color: white;
+}
+
+.diskBar { 
+  height: 4px; 
+  background: var(--side-disk-bar); 
+  border-radius: 10px; 
+  overflow: hidden; 
+}
+
+.diskProgress { 
+  height: 100%; 
+  background: var(--side-disk-fill);
+  transition: width 1s ease-out; 
+}
+
+.diskFull {
+  background: var(--side-accent); /* Cambia al color de acento del tema si está lleno */
+}
+
+.dlBarFill {
+  height: 100%;
+  background: var(--side-accent);
+  transition: width 0.3s ease;
+}
+
+.dlPercent { 
+  color: var(--side-accent); 
+  font-weight: bold; 
+}
+
+/* Títulos de grupo */
+.groupTitle {
+  color: var(--side-text);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0 25px;
+  margin-bottom: 10px;
+  opacity: 0.6;
+}
+
+/* Correcciones de visibilidad para temas claros (NieR) */
+.sidebar {
+  /* ... tus props anteriores ... */
+  background-color: var(--side-bg, #1a1a1a); /* Fallback oscuro */
+  color: var(--side-text, #888);
+}
+
+/* Forzar color de texto en títulos de grupo para que no desaparezcan */
+.groupTitle {
+  color: var(--side-text);
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0 25px;
+  margin-bottom: 12px;
+  opacity: 0.8; /* Aumentado para visibilidad */
+}
+
+/* Arreglo del botón Toggle */
+.toggleBtn {
+  position: absolute;
+  top: 30px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%; /* Forzamos circular */
+  background: var(--side-accent, #e50914);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1200;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  /* Eliminamos clip-path aquí si da problemas en circular */
+  clip-path: none !important; 
+}
+
+/* Ajuste para que las letras no se pierdan en fondos claros (NieR) */
+[data-theme='nier'] .navItem {
+  color: #454138; /* Color oscuro típico de NieR */
+}
+
+[data-theme='nier'] .active {
+  background: rgba(69, 65, 56, 0.1);
+  color: #454138;
+}
+
+[data-theme='nier'] .sidebar {
+  border-right: 2px solid #454138;
+}
+
+/* Logos y Badge */
+.logoIcon {
+  /* ... */
+  clip-path: var(--clip-path, none); /* Solo aplica si el tema lo pide */
+}
+
+/* Específico para YoRHa */
+[data-theme='yorha'] .sidebar {
+  border-right: 4px solid var(--side-accent);
+  box-shadow: 10px 0 0 rgba(0,0,0,0.05); /* Sombra sólida técnica */
+}
+
+[data-theme='yorha'] .navItem:hover {
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+[data-theme='yorha'] .active {
+  background: var(--side-item-active) !important;
+  color: #fff !important;
+  /* Efecto de recorte angular en el item activo */
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+}
+
+[data-theme='yorha'] .toggleBtn {
+  background: #000;
+  border-radius: 0; /* Botón cuadrado */
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+}
+
+[data-theme='yorha'] .logoIcon {
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+}
+
+[data-theme='yorha'] .groupTitle {
+  color: #000;
+  font-weight: 900;
+  border-bottom: 1px solid #000;
+  display: inline-block;
+  padding: 0 5px;
+  margin-left: 20px;
+}
+
+/* Efecto Scanline sutil para el fondo YoRHa */
+[data-theme='yorha'] .sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+}
+
+[data-theme='yorha'] .activeIndicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: #000;
+  /* Fondo negro base */
+  overflow: hidden;
+}
+
+/* El punto de escaneo brillante */
+[data-theme='yorha'] .activeIndicator::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.8), /* Brillo blanco */
+    transparent
+  );
+  animation: yorha-scan-hud 2s infinite linear;
+}
+
+@keyframes yorha-scan-hud {
+  0% { top: -50%; }
+  100% { top: 150%; }
+}
+
+[data-theme='ff13'] .sidebar {
+  background: linear-gradient(
+    160deg, 
+    rgba(255, 255, 255, 0.4) 0%, 
+    rgba(219, 233, 244, 0.2) 100%
+  ) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+  
+  /* Curva cóncava distintiva de FF13 */
+  clip-path: ellipse(100% 150% at -15% 50%);
+  
+  /* Tipografía fina */
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+}
+
+/* Ajuste cuando está colapsado para no perder la curva */
+[data-theme='ff13'] .collapsed {
+  clip-path: none; 
+  border-right: 1px solid rgba(0, 210, 255, 0.3);
+}

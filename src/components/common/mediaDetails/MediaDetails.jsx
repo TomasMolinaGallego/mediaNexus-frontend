@@ -16,7 +16,6 @@ const formatEpisodeName = (fileName) => {
         .replace(/_/g, " ")       // Replace underscores
         .trim();
 };
-// ... (mismos imports y utilidades)
 
 const MediaDetails = ({ series, onPlayNext }) => {
     const [metaData, setMetaData] = useState(null);

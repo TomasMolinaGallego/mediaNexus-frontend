@@ -154,3 +154,402 @@
     transform: translateX(100%);
   }
 }
+
+.seasonSection {
+  margin-bottom: 60px;
+}
+
+.seasonTitle {
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 25px;
+  border-left: 5px solid #e50914; /* Rojo para temporadas */
+  padding-left: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Estilo especial para la sección de OVAs */
+.ovaTitle {
+  border-left-color: #00a8ff; /* Azul o Dorado para diferenciar */
+  color: #00a8ff;
+  letter-spacing: 2px;
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  list-style: none;
+  padding: 0;
+}
+
+/* --- CONTENEDOR Y GRID --- */
+.listContainer {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: var(--font-family);
+}
+
+.seasonSection {
+  margin-bottom: 60px;
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.seasonTitle {
+  font-size: 1.8rem;
+  color: var(--text-color);
+  margin-bottom: 25px;
+  border-left: 5px solid var(--accent);
+  padding-left: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+/* Estilo especial para la sección de OVAs */
+.ovaTitle {
+  /* En Netflix es azul, en los demás sigue el acento o un tono derivado */
+  border-left-color: #00a8ff; 
+  color: #00a8ff;
+  
+  /* Adaptación para temas no-netflix */
+  [data-theme='nier'] & { border-left-color: #605c4e; color: #605c4e; }
+  [data-theme='tactical'] & { border-left-color: #00f2ff; color: #00f2ff; filter: brightness(1.5); }
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.gridItem {
+  display: flex;
+}
+
+/* --- SKELETON ADAPTATIVO --- */
+.skeletonCard {
+  background: var(--card-bg);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius);
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeletonImage {
+  aspect-ratio: 16 / 9;
+  background: var(--input-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonContent {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonTitle, .skeletonFooter {
+  background: var(--border-main);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonTitle { height: 14px; width: 80%; }
+.skeletonFooter { height: 10px; width: 40%; margin-top: auto; }
+
+/* --- ANIMACIÓN SHIMMER DINÁMICA --- */
+.skeletonImage::after,
+.skeletonTitle::after,
+.skeletonFooter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* --- LOADING PULSE --- */
+.circle {
+  width: 14px;
+  height: 14px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  animation: pulse 1.2s infinite ease-in-out;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .mediaGrid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mediaGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .seasonTitle { font-size: 1.4rem; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+.seasonHeader {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  margin-bottom: 20px;
+}
+
+.seasonHeader.clickable {
+  cursor: pointer;
+}
+
+.seasonHeader.clickable:hover .seasonTitle {
+  color: var(--accent);
+  filter: brightness(1.2);
+}
+
+.seasonTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0 !important; /* Sobreescribimos el anterior */
+  font-size: 1.8rem;
+  color: var(--text-color);
+  border-left: 5px solid var(--accent);
+  padding-left: 15px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.episodeCount {
+  font-size: 1rem;
+  opacity: 0.5;
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+/* Lógica de Colapso */
+.collapsibleContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.collapsibleContent.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  padding-bottom: 40px; /* Espacio para que no se pegue a la siguiente temporada */
+}
+
+.collapsibleContent.closed {
+  visibility: hidden;
+}
+
+/* Aseguramos que la grid interna se vea correctamente dentro del colapso */
+.collapsibleContent > ul {
+  min-height: 0;
+}
+
+.globalControls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-main);
+  padding-bottom: 15px;
+}
+
+.controlBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border-main);
+  color: var(--text-dim);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.controlBtn:hover {
+  background: var(--input-bg);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.seasonSection {
+  margin-bottom: 40px;
+}
+
+.gridWrapper {
+  min-height: 0; /* Crucial para la animación del grid rows */
+  padding-top: 10px;
+}
+
+/* Mejora de la animación: Usamos un Grid para animar altura desconocida */
+.collapsibleContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.collapsibleContent.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  padding-bottom: 20px;
+}
+
+/* El header ahora tiene un hover más sutil */
+.seasonHeader.clickable {
+  transition: background 0.2s ease;
+  border-radius: 8px;
+  padding: 8px 0;
+}
+
+.seasonHeader.clickable:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* NieR theme adaptation */
+[data-theme='nier'] .controlBtn {
+  border: 2px solid #605c4e;
+  background: #d1cdb7;
+  color: #605c4e;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
+}
+
+/* MediaList.module.css */
+.card {
+  animation: slideUp 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0); 
+  }
+}
+
+/* Aplicar delay progresivo a las tarjetas */
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+
+[data-theme='yorha'] .card {
+  border: 1px solid #000;
+  background: #fff;
+  transition: all 0.2s;
+}
+
+[data-theme='yorha'] .card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 8px 8px 0px #000;
+}
+
+[data-theme='yorha'] .cardTitle {
+  background: #000;
+  color: #fff;
+  padding: 5px;
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+/* Imagen en blanco y negro suave hasta que haces hover */
+[data-theme='yorha'] .cardImage {
+  filter: grayscale(1) contrast(1.2);
+  transition: filter 0.3s;
+}
+
+[data-theme='yorha'] .card:hover .cardImage {
+  filter: grayscale(0.5);
+}
+
+/* Contenedor de la tarjeta */
+[data-theme='yorha'] .card {
+  opacity: 0;
+  animation: yorha-data-stream 0.4s ease-out forwards;
+}
+
+/* Retraso progresivo para las primeras 12 tarjetas (N-th child) */
+[data-theme='yorha'] .card:nth-child(1)  { animation-delay: 0.05s; }
+[data-theme='yorha'] .card:nth-child(2)  { animation-delay: 0.10s; }
+[data-theme='yorha'] .card:nth-child(3)  { animation-delay: 0.15s; }
+[data-theme='yorha'] .card:nth-child(4)  { animation-delay: 0.20s; }
+[data-theme='yorha'] .card:nth-child(5)  { animation-delay: 0.25s; }
+[data-theme='yorha'] .card:nth-child(6)  { animation-delay: 0.30s; }
+/* ... añade más si es necesario ... */
+
+@keyframes yorha-data-stream {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scaleX(0.9);
+    filter: brightness(3); /* Parpadeo inicial blanco */
+  }
+  50% {
+    opacity: 0.5;
+    filter: brightness(1);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-2px) scaleX(1.02); /* Pequeño rebote técnico */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleX(1);
+    filter: brightness(1);
+  }
+}

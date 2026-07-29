@@ -1,113 +1,804 @@
-.appContainer {
-  display: flex; /* Esto pone el Sidebar y el Main lado a lado */
-  background-color: #0a0a0a;
-  min-height: 100vh;
-  color: white;
-  overflow: hidden; /* Evita scrolls dobles extraños */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+/* --- DEFINICIÓN DE VARIABLES --- */
+:root,
+[data-theme='netflix'] {
+  --bg-main: #0a0a0a;
+  --bg-secondary: #050505;
+  --accent: #e50914;
+  --accent-hover: #b20710;
+  --text-main: #ffffff;
+  --text-dim: #888888;
+  --border-main: #1a1a1a;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-weight-bold: 900;
+  /* Netflix usa pesos muy pesados para títulos */
+  --letter-spacing: -0.02em;
+  /* Las fuentes de Netflix suelen estar un poco apretadas */
+  --radius: 6px;
+  --scroll-track: #050505;
+  --scroll-thumb: #333;
+  --scanlines: none;
+  --config-gradient: radial-gradient(circle at top, #151515 0%, #0a0a0a 100%);
 }
 
-.mainContent {
-  flex: 1; /* Ocupa todo el espacio restante */
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  position: relative;
+[data-theme='nier'] {
+  --bg-main: #d1cdb7;
+  --bg-secondary: #c7c3ac;
+  --accent: #454138;
+  --accent-hover: #605c4e;
+  --text-main: #454138;
+  --text-dim: #605c4e;
+  --border-main: #454138;
+  --font-family: 'Segoe UI', serif;
+  --radius: 0px;
+  --scroll-track: #c7c3ac;
+  --scroll-thumb: #454138;
+  --scanlines: url("https://www.transparenttextures.com/patterns/cardboard-flat.png");
+  --config-gradient: radial-gradient(circle at top, #bab498 0%, #d1cdb7 100%);
 }
 
-.scrollableArea {
-  flex: 1;
-  overflow-y: auto; /* El scroll sucede aquí, no en toda la página */
-  padding-bottom: 50px;
+[data-theme='tactical'] {
+  --bg-main: #050f0f;
+  --bg-secondary: #020808;
+  --accent: #00f2ff;
+  --accent-hover: #008c94;
+  --text-main: #e0faff;
+  --text-dim: #00f2ff88;
+  --border-main: rgba(0, 242, 255, 0.3);
+  --font-family: 'Courier New', monospace;
+  --radius: 2px;
+  --scroll-track: #020808;
+  --scroll-thumb: rgba(0, 242, 255, 0.3);
+  --scanlines: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  --config-gradient: radial-gradient(circle at top, #081a1a 0%, #050f0f 100%);
 }
 
-/* Personalización del scrollbar para que sea rojo/negro */
-.scrollableArea::-webkit-scrollbar {
-  width: 8px;
+[data-theme='yorha'] {
+  /* Fondos */
+  --side-bg: #e5e5e5; /* Gris muy claro, casi blanco */
+  --side-border: #1a1a1a;
+  
+  /* Textos */
+  --side-text: #666666; /* Texto inactivo */
+  --side-text-active: #ffffff; /* Texto sobre fondo negro */
+  
+  /* Acentos y Selección */
+  --side-accent: #1a1a1a; /* El acento es el negro sólido */
+  --side-item-hover: rgba(0, 0, 0, 0.05);
+  --side-item-active: #1a1a1a; /* Fondo negro al seleccionar */
+  
+  /* Elementos técnicos */
+  --side-badge-bg: #cccccc;
+  --side-disk-bar: #cccccc;
+  --side-disk-fill: #1a1a1a;
+  
+  /* Estética YoRHa */
+  --font-family: 'Share Tech Mono', monospace;
+  --clip-path: polygon(0 0, 95% 0, 100% 15%, 100% 100%, 5% 100%, 0 85%);
+  --radius: 0px; /* YoRHa no usa curvas, usa ángulos */
+
+  /* Paleta Nuclear */
+  --bg-main: #e0e0e0;
+  --bg-secondary: #d4d4d4;
+  --text-color: #1a1a1a;
+  --text-dim: #666666;
+  --accent: #000000;
+  --accent-rgb: 0, 0, 0;
+  
+  /* Formas YoRHa */
+  --radius: 0px;
+  --clip-path: polygon(0 0, 95% 0, 100% 15%, 100% 100%, 5% 100%, 0 85%);
+  --border-main: 1px solid #000000;
+  
+  /* Efectos */
+  --shadow: 4px 4px 0px #000000;
 }
 
-.scrollableArea::-webkit-scrollbar-track {
-  background: #050505;
-}
-
-.scrollableArea::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 10px;
-}
-
-.scrollableArea::-webkit-scrollbar-thumb:hover {
-  background: #e50914; /* Rojo al pasar el ratón */
-}
-
-.contentBody {
-    padding: 20px 5%;
-    position: relative;
-    z-index: 10; /* Aumenta si es necesario */
-    background-color: #0a0a0a;
-    /* Asegúrate de que no tenga un margin-top negativo que suba la lista */
-    margin-top: 0; 
-}
-.sectionTitle {
-  font-size: 1.8rem;
-  margin-bottom: 30px;
-  color: white;
-  font-weight: 700;
-  border-left: 4px solid #e50914; /* Detalle rojo estilo Netflix */
-  padding-left: 15px;
-}
-
-.configWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 60px 20px;
-    min-height: 100%;
-    background: radial-gradient(circle at top, #151515 0%, #0a0a0a 100%);
-    animation: fadeInConfig 0.4s ease-out;
-}
-
-@keyframes fadeInConfig {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Opcional: Estilo para el botón de ajustes si lo pones en el Sidebar */
-.settingsIconActive {
-    color: #e50914 !important;
-    background: rgba(229, 9, 20, 0.1);
-}
+/* --- CLASES DE APP APLICANDO VARIABLES --- */
 
 .appContainer {
   display: flex;
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden; /* Evita el scroll horizontal */
+  background-color: var(--bg-main);
+  background-image: var(--scanlines);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  transition: all 0.4s ease;
+  overflow-x: hidden;
+}
+
+.nierDetail::before {
+  content: "REF_LOG: [0x451]";
+  position: absolute;
+  font-size: 10px;
+  top: -15px;
+  left: 0;
+  opacity: 0.5;
+}
+
+.nierContainer {
+  border-top: 1px solid var(--text-dim);
+  border-bottom: 1px solid var(--text-dim);
+  padding: 20px 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(218, 212, 187, 0.03) 0px,
+    rgba(218, 212, 187, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  ); /* Efecto de líneas de monitor viejo */
 }
 
 .mainContent {
   flex: 1;
-  min-width: 0; /* ¡CRÍTICO! Permite que los hijos de flexbox se encojan */
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  position: relative;
   transition: margin-left 0.3s ease;
 }
 
-/* Ajuste de margen para el Sidebar en Escritorio */
-@media (min-width: 1025px) {
-  .mainContent {
-    margin-left: 70px; /* Ancho del sidebar colapsado */
+.scrollableArea {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  padding-bottom: 100px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Personalización del scrollbar dinámico */
+.scrollableArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollableArea::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+
+.scrollableArea::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 10px;
+}
+
+.scrollableArea::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.contentBody {
+  padding: 20px 5%;
+  position: relative;
+  z-index: 10;
+  background-color: var(--bg-main);
+  margin-top: 0;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: var(--text-main);
+  font-weight: 700;
+  border-left: 4px solid var(--accent);
+  padding-left: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.configWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
+  min-height: 100%;
+  background: var(--config-gradient);
+  animation: fadeInConfig 0.4s ease-out;
+}
+
+@keyframes fadeInConfig {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* En móvil, el contenido ocupa el 100% real */
+.settingsIconActive {
+  color: var(--accent) !important;
+  background: rgba(229, 9, 20, 0.1);
+  /* Puedes parametrizar esto si quieres */
+}
+
+/* Layout Responsivo */
+@media (min-width: 1025px) {
+  .mainContent {
+    margin-left: 70px;
+  }
+}
+
 @media (max-width: 1024px) {
   .mainContent {
     margin-left: 0 !important;
     width: 100%;
   }
+}
+
+.episodesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.emptySearch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15vh 20px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.emptySearch p {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-color);
+  letter-spacing: 2px;
+}
+
+[data-theme='yorha'] .logoText {
+  position: relative;
+}
+
+[data-theme='yorha'] .logoText::after {
+  content: "ALEXANDRIA";
+  position: absolute;
+  left: 2px;
+  text-shadow: -1px 0 red;
+  top: 0;
+  background: var(--bg-main);
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+@keyframes noise-anim {
+  0% { clip: rect(10px, 9999px, 20px, 0); }
+  20% { clip: rect(30px, 9999px, 40px, 0); }
+  /* ... más pasos ... */
+  100% { clip: rect(10px, 9999px, 80px, 0); }
+}
+
+[data-theme='yorha'] body {
+  background-color: #e0e0e0;
+  /* Patrón de puntos tácticos */
+  background-image: radial-gradient(#bcbcbc 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: relative;
+}
+
+/* Efecto de viñeta para centrar la atención */
+[data-theme='yorha'] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.05) 100%);
+  pointer-events: none;
+}
+
+[data-theme='yorha'] .navItem::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  width: 4px;
+  height: 0%;
+  background: #000;
+  transition: height 0.3s ease;
+}
+
+[data-theme='yorha'] .navItem:hover::before {
+  height: 60%; /* La línea crece al hacer hover */
+}
+
+/* El texto vibra un poco al entrar */
+[data-theme='yorha'] .navItem:hover span {
+  animation: yorha-glitch 0.2s ease;
+}
+
+@keyframes yorha-glitch {
+  0% { transform: translate(2px, 0); }
+  50% { transform: translate(-2px, 0); }
+  100% { transform: translate(0); }
+}
+
+[data-theme='yorha'] .diskBar, 
+[data-theme='yorha'] .dlBarBg {
+  background: #bcbcbc;
+  height: 12px; /* Más gruesas */
+  border: 1px solid #000;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme='yorha'] .diskProgress, 
+[data-theme='yorha'] .dlBarFill {
+  background: #000;
+  /* Efecto de segmentos */
+  background-image: linear-gradient(
+    90deg, 
+    transparent 0%, 
+    transparent 80%, 
+    rgba(224, 224, 224, 0.5) 80%, 
+    rgba(224, 224, 224, 0.5) 100%
+  );
+  background-size: 15px 100%;
+}
+
+[data-theme='yorha'] .sidebar::after {
+  content: "UNIT: SERVER_01 // TYPE: MEDIA_CENTER";
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  font-size: 8px;
+  color: #000;
+  opacity: 0.4;
+  font-family: var(--font-family);
+}
+
+[data-theme='yorha'] .card::after {
+  content: "RECORD_ID_" attr(data-id); /* Si tienes IDs de serie */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 7px;
+  background: #000;
+  color: #fff;
+  padding: 1px 3px;
+}
+
+/* Capa de efecto de transición YoRHa */
+.yorha-glitch-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #e0e0e0;
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  animation: yorha-system-boot 0.6s steps(1) forwards;
+}
+
+.yorha-glitch-overlay::before {
+  content: "SYNCING WITH BUNKER... [7%]";
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  color: #000;
+  font-weight: bold;
+}
+
+/* El efecto de parpadeo y desaparición */
+@keyframes yorha-system-boot {
+  0% { opacity: 1; clip-path: inset(40% 0 40% 0); background: #000; color: #fff; }
+  15% { opacity: 1; clip-path: inset(10% 0 10% 0); background: #e0e0e0; }
+  30% { opacity: 0.8; transform: skewX(10deg); }
+  45% { opacity: 1; transform: skewX(-10deg); background: #000; }
+  60% { opacity: 0.5; clip-path: inset(0 0 0 0); }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* Efecto de ruido de fondo durante el glitch */
+.yorha-noise {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url('https://media.giphy.com/media/oEI9uWUicS3Ze/giphy.gif'); /* Ruido estático */
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+}
+
+/* App.module.css o index.css */
+.yorhaGlitchOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* El Z-INDEX debe ser mayor que el del Sidebar (1100) y el Header */
+  z-index: 99999; 
+  background: #e0e0e0;
+  pointer-events: none; /* Permite hacer clic a través de ella si algo falla */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Animación agresiva */
+  animation: yorhaSystemBoot 0.6s steps(1) forwards;
+}
+
+@keyframes yorhaSystemBoot {
+  0% { opacity: 1; transform: scaleY(0.01) scaleX(1); background: #000; }
+  15% { transform: scaleY(1) scaleX(1); background: #e0e0e0; }
+  30% { transform: skewX(20deg); opacity: 0.8; }
+  45% { transform: skewX(-20deg); background: #000; }
+  60% { opacity: 1; transform: scaleY(0.01); background: #e0e0e0; }
+  80% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+.syncText {
+  font-family: 'Share Tech Mono', monospace;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+/* El contenedor de ruido */
+.noise {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0.15;
+  pointer-events: none;
+  /* Imagen de ruido estático */
+  background-image: url('https://media.giphy.com/media/oEI9uWUicS3Ze/giphy.gif');
+  mix-blend-mode: overlay;
+}
+
+/* Líneas de escaneo móviles */
+.scanlines {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.2) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.05),
+    rgba(0, 255, 0, 0.02),
+    rgba(0, 0, 255, 0.05)
+  );
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+}
+
+.glitchContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hexCode {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  color: #000;
+  opacity: 0.6;
+}
+
+.fakeLoadingBar {
+  width: 200px;
+  height: 2px;
+  background: rgba(0,0,0,0.1);
+  margin-top: 10px;
+}
+
+.fakeLoadingFill {
+  height: 100%;
+  background: #000;
+  animation: load 0.6s ease-in-out;
+}
+
+@keyframes load {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes yorhaSystemBoot {
+  0% { opacity: 0; }
+  5% { opacity: 1; filter: invert(1); } /* Invierte colores al inicio */
+  40% { transform: scaleY(1) skew(10deg); filter: invert(0); }
+  85% { opacity: 1; background: #fff; } /* Flash blanco final */
+  100% { opacity: 0; visibility: hidden; }
+}
+
+[data-theme='yorha'] .app::before {
+  content: "LOCATION: CITY_RUINS // SYSTEM: ACTIVE // UNIT: 2B_9S";
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: #000;
+  opacity: 0.4;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+[data-theme='yorha'] .app::after {
+  content: "[ ■■■■■■■■□□ ] 82% SYNC";
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: #000;
+  opacity: 0.4;
+  z-index: 1000;
+}
+
+[data-theme='yorha'] .mainLayout {
+  animation: yorha-flicker 0.15s infinite;
+}
+
+@keyframes yorha-flicker {
+  0% { opacity: 0.99; }
+  50% { opacity: 1; }
+  100% { opacity: 0.995; }
+}
+
+[data-theme='yorha'] .App::before {
+  /* ... tu configuración anterior (position fixed, top, right, etc.) ... */
+  display: block;
+  white-space: pre; /* Para respetar los saltos de línea si los hay */
+  overflow: hidden;
+  border-right: 2px solid rgba(0,0,0,0.5); /* Cursor de terminal */
+  animation: 
+    yorha-typewriter 2s steps(40) 1s forwards,
+    yorha-blink 0.75s step-end infinite;
+  max-width: 0; /* Empieza oculto para la animación */
+}
+
+@keyframes yorha-typewriter {
+  from { max-width: 0; }
+  to { max-width: 400px; }
+}
+
+@keyframes yorha-blink {
+  from, to { border-color: transparent; }
+  50% { border-color: black; }
+}
+
+[data-theme='yorha'] .appContainer::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.03) 50%
+  ), linear-gradient(
+    90deg, 
+    rgba(255, 0, 0, 0.01), 
+    rgba(0, 255, 0, 0.01), 
+    rgba(0, 0, 255, 0.01)
+  );
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+  z-index: 10000;
+  animation: yorha-vignette 5s infinite;
+}
+
+@keyframes yorha-vignette {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+[data-theme='yorha'] .card:hover {
+  /* Creamos una sombra que parece "píxeles escapando" */
+  box-shadow: 
+    8px 8px 0px rgba(0,0,0,1),
+    12px -4px 0px rgba(0,0,0,0.1),
+    -4px 12px 0px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s steps(2);
+}
+
+.hacking-fade-in {
+  animation: yorha-glitch-entry 0.4s steps(3);
+}
+
+@keyframes yorha-glitch-entry {
+  0% { opacity: 0; filter: invert(1); }
+  50% { opacity: 0.5; filter: hue-rotate(90deg); }
+  100% { opacity: 1; filter: invert(0); }
+}
+
+[data-theme='final-fantasy'] {
+  /* Paleta de colores clásica del menú */
+  --bg-main: #000000;
+  --bg-menu: linear-gradient(180deg, #000080 0%, #000040 100%);
+  --bg-secondary: #0a0a2a;
+  
+  --text-main: #ffffff;
+  --text-accent: #e2e2e2;
+  
+  /* Bordes metálicos icónicos */
+  --border-color: #c0c0c0;
+  --border-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #808080;
+  
+  --accent: #4cc9f0; /* Color de selección */
+  --font-family: 'Optima', 'Palatino', 'serif'; /* O 'Matrix II' si la tienes */
+  
+  --radius: 8px;
+}
+
+[data-theme='ff13'] {
+  /* Paleta de Colores de Cocoon */
+  --bg-main: #f4f7f9;
+  --bg-sidebar: linear-gradient(160deg, rgba(255, 255, 255, 0.4) 0%, rgba(200, 225, 240, 0.3) 100%);
+  --bg-card: rgba(255, 255, 255, 0.75);
+  
+  --text-primary: #34495e;
+  --text-secondary: #7f8c8d;
+  --accent-cyan: #00d2ff;
+  --accent-pink: #ff007f; /* Lightning Pink */
+  
+  --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 10px 30px rgba(150, 180, 200, 0.2);
+  
+  --font-ff13: 'Montserrat', 'Segoe UI', sans-serif;
+  --radius-main: 30px;
+}
+
+[data-theme='ff13'] .appContainer {
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 50% 0%, rgba(0, 210, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 0, 127, 0.05) 0%, transparent 50%);
+  min-height: 100vh;
+  position: relative;
+  font-family: var(--font-ff13);
+  overflow: hidden;
+}
+
+/* Partículas flotantes sutiles */
+[data-theme='ff13'] .appContainer::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.4;
+  pointer-events: none;
+  animation: ff13-drift 100s linear infinite;
+}
+
+@keyframes ff13-drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1000px); }
+}
+
+[data-theme='ff13'] .sidebar {
+  background: var(--bg-sidebar) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-right: var(--glass-border);
+  width: 280px;
+  /* La famosa curva cóncava de FF13 */
+  clip-path: ellipse(100% 130% at -20% 50%);
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+[data-theme='ff13'] .navItem {
+  color: var(--text-primary);
+  padding: 12px 25px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 300;
+  font-size: 0.85rem;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+}
+
+[data-theme='ff13'] .navItem:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--accent-cyan);
+  transform: translateX(15px);
+  box-shadow: 0 5px 15px rgba(0, 210, 255, 0.1);
+}
+
+/* El punto de luz al estar activo */
+[data-theme='ff13'] .navItem.active::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+[data-theme='ff13'] .card {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(10px);
+  border: var(--glass-border);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Detalle geométrico decorativo en las esquinas */
+[data-theme='ff13'] .card::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 210, 255, 0.1) 50%);
+}
+
+[data-theme='ff13'] .card:hover {
+  transform: translateY(-5px) scale(1.01);
+  border-left: 4px solid var(--accent-cyan);
+}
+
+[data-theme='ff13'] h2, [data-theme='ff13'] h3 {
+  font-weight: 200;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--text-primary);
+}
+
+[data-theme='ff13'] .scroll-progress {
+  height: 4px;
+  background: rgba(0, 210, 255, 0.2);
+}
+
+[data-theme='ff13'] .scroll-progress-fill {
+  background: linear-gradient(90deg, var(--accent-cyan), #fff);
+  box-shadow: 0 0 15px var(--accent-cyan);
+  position: relative;
+}
+
+/* Efecto de pulso en la barra */
+[data-theme='ff13'] .scroll-progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  animation: ff13-bar-shine 2s infinite;
+}
+
+@keyframes ff13-bar-shine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+[data-theme='ff13'] button.primary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--accent-cyan);
+  padding: 10px 30px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+[data-theme='ff13'] button.primary:hover {
+  background: var(--accent-cyan);
+  color: white;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
 }

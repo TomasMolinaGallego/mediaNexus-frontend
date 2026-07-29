@@ -1,0 +1,123 @@
+.series-container {
+  background-color: #0f172a;
+  color: #f8fafc;
+  min-height: 100vh;
+}
+
+.hero-banner {
+  position: relative;
+  height: 350px;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+.hero-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #0f172a, transparent);
+}
+
+.content-wrapper {
+  max-width: 1000px;
+  margin: -120px auto 0;
+  padding: 0 20px;
+  position: relative;
+}
+
+.main-info {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.poster-img {
+  width: 220px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.info-text h1 {
+  font-size: 2.5rem;
+  margin: 0 0 10px 0;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  margin-right: 10px;
+  text-transform: uppercase;
+}
+
+.badge-anime { background: #f59e0b; color: #000; }
+.badge-status-on { background: #10b981; }
+.badge-status-off { background: #ef4444; }
+
+.overview {
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 20px 0;
+}
+
+.meta-grid {
+  display: flex;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.section-title {
+  margin: 40px 0 20px;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 10px;
+}
+
+.season-card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.season-info { flex: 1; margin-right: 40px; }
+
+.progress-bar-container {
+  background: #334155;
+  height: 6px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.progress-bar-fill {
+  background: #3b82f6;
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.btn-download {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-download:disabled { background: #475569; cursor: not-allowed; }
+
+.completed-tag { color: #10b981; font-weight: bold; }

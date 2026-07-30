@@ -8,6 +8,7 @@ const VideoPlayer = ({ media, onClose }) => {
   const [showUI, setShowUI] = useState(true);
   const [subtitles, setSubtitles] = useState([]);
   const [audioFallback, setAudioFallback] = useState(false);
+  const [ready, setReady] = useState(false); // espera al media-info antes de montar el <video>
   const playerContainerRef = useRef(null);
 
   const baseUrl = `${process.env.REACT_APP_BACKEND_URL}/api/video-player`;
@@ -23,6 +24,27 @@ const VideoPlayer = ({ media, onClose }) => {
     window.hideTimer = setTimeout(() => setShowUI(false), 3000);
   }, []);
 
+  // Decide de antemano si hace falta el audio-fix, consultando el códec real
+  useEffect(() => {
+    let cancelled = false;
+    setReady(false);
+    const fetchMediaInfo = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/media-info/${media.aliasRoute}/${media.folder}/${media.title}`);
+        const json = await response.json();
+        if (!cancelled) {
+          setAudioFallback(json.status === 'success' && json.data.needsAudioFix);
+          setReady(true);
+        }
+      } catch (err) {
+        console.error("Error consultando media-info", err);
+        if (!cancelled) setReady(true); // seguimos con la fuente directa por defecto
+      }
+    };
+    fetchMediaInfo();
+    return () => { cancelled = true; };
+  }, [media, baseUrl]);
+
   useEffect(() => {
     const fetchSubs = async () => {
       try {
@@ -36,18 +58,34 @@ const VideoPlayer = ({ media, onClose }) => {
     fetchSubs();
   }, [media, baseUrl]);
 
-  // Si el audio no suena (evento 'stalled'/'error' en pista de audio no es directamente
-  // detectable, pero el navegador SÍ emite 'error' cuando el códec no es soportado en absoluto;
-  // para audio silencioso sin error de decodificación, damos al usuario un botón manual también)
+  // Red de seguridad: si el códec "parecía seguro" pero el navegador decodifica
+  // vídeo y no decodifica ningún byte de audio, activamos el fallback igualmente.
   useEffect(() => {
+    if (!ready || audioFallback) return;
     const video = videoRef.current;
     if (!video) return;
-    const handleError = () => {
-      if (!audioFallback) setAudioFallback(true);
+
+    const handleErrorEvent = () => setAudioFallback(true);
+    video.addEventListener('error', handleErrorEvent);
+
+    let checkTimer = null;
+    const handlePlaying = () => {
+      checkTimer = setTimeout(() => {
+        const decoded = video.webkitAudioDecodedByteCount; // Chrome/Edge
+        const hasAudioTrack = video.audioTracks ? video.audioTracks.length > 0 : true;
+        if (hasAudioTrack && typeof decoded === 'number' && decoded === 0) {
+          setAudioFallback(true);
+        }
+      }, 4000);
     };
-    video.addEventListener('error', handleError);
-    return () => video.removeEventListener('error', handleError);
-  }, [audioFallback]);
+    video.addEventListener('playing', handlePlaying);
+
+    return () => {
+      video.removeEventListener('error', handleErrorEvent);
+      video.removeEventListener('playing', handlePlaying);
+      if (checkTimer) clearTimeout(checkTimer);
+    };
+  }, [ready, audioFallback, videoSrc]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -87,24 +125,25 @@ const VideoPlayer = ({ media, onClose }) => {
     >
       <button className={`${styles.closeBtn} ${showUI ? styles.show : ''}`} onClick={onClose}>✕</button>
 
-      <div className={styles.videoWrapper} onClick={togglePlay}>
-        <video
-          key={videoSrc}
-          ref={videoRef}
-          autoPlay
-          onLoadedMetadata={handleLoadedMetadata}
-          onTimeUpdate={() => {
-            if (Math.floor(videoRef.current.currentTime) % 5 === 0) {
-              localStorage.setItem(storageKey, videoRef.current.currentTime);
-            }
-          }}
-          crossOrigin="anonymous"
-          className={styles.videoElement}
-        >
-          {/* Sin "type" fijo: dejamos que el navegador use el Content-Type real de la cabecera */}
-          <source src={videoSrc} />
-        </video>
-      </div>
+      {ready && (
+        <div className={styles.videoWrapper} onClick={togglePlay}>
+          <video
+            key={videoSrc}
+            ref={videoRef}
+            autoPlay
+            onLoadedMetadata={handleLoadedMetadata}
+            onTimeUpdate={() => {
+              if (Math.floor(videoRef.current.currentTime) % 5 === 0) {
+                localStorage.setItem(storageKey, videoRef.current.currentTime);
+              }
+            }}
+            crossOrigin="anonymous"
+            className={styles.videoElement}
+          >
+            <source src={videoSrc} />
+          </video>
+        </div>
+      )}
 
       <CustomControls
         videoRef={videoRef}
@@ -116,8 +155,6 @@ const VideoPlayer = ({ media, onClose }) => {
         baseUrl={baseUrl}
         media={media}
         playerContainerRef={playerContainerRef}
-        onFixAudio={() => setAudioFallback(true)}
-        audioFallback={audioFallback}
       />
     </div>
   );

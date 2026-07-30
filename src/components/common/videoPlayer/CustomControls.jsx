@@ -5,7 +5,7 @@ import { MdSubtitles } from 'react-icons/md';
 
 const CustomControls = ({
   videoRef, isPlaying, togglePlay, visible, title,
-  subtitles, playerContainerRef, baseUrl, media
+  subtitles, playerContainerRef, baseUrl, media, ready
 }) => {
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -23,8 +23,10 @@ const CustomControls = ({
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  useEffect(() => {
+ useEffect(() => {
     const video = videoRef.current;
+    if (!video) return; // el <video> aún no existe (ready === false)
+
     const update = () => {
       setProgress((video.currentTime / video.duration) * 100 || 0);
       setTimers({ current: formatTime(video.currentTime), total: formatTime(video.duration) });
@@ -35,15 +37,18 @@ const CustomControls = ({
       video.removeEventListener('timeupdate', update);
       video.removeEventListener('loadedmetadata', update);
     };
-  }, [videoRef]);
+  }, [videoRef, ready]); // "ready" fuerza a re-ejecutar el efecto cuando el <video> se monta
+
 
   const handleSeek = (e) => {
+    if (!videoRef.current) return;
     const rect = progressBarRef.current.getBoundingClientRect();
     const pos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     videoRef.current.currentTime = pos * videoRef.current.duration;
   };
 
   const handleVolumeChange = (e) => {
+    if (!videoRef.current) return;
     const val = parseFloat(e.target.value);
     setVolume(val);
     videoRef.current.volume = val;

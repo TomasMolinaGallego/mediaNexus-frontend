@@ -102,6 +102,7 @@ const VideoPlayer = ({ media, onClose }) => {
   }, [onClose]);
 
   const togglePlay = () => {
+    if (!videoRef.current) return;
     if (videoRef.current.paused) {
       videoRef.current.play();
       setIsPlaying(true);
@@ -155,6 +156,7 @@ const VideoPlayer = ({ media, onClose }) => {
         baseUrl={baseUrl}
         media={media}
         playerContainerRef={playerContainerRef}
+        ready={ready}
       />
     </div>
   );

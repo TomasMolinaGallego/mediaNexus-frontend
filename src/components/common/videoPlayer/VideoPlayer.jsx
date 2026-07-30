@@ -7,14 +7,16 @@ const VideoPlayer = ({ media, onClose }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [showUI, setShowUI] = useState(true);
   const [subtitles, setSubtitles] = useState([]);
+  const [audioFallback, setAudioFallback] = useState(false);
   const playerContainerRef = useRef(null);
 
   const baseUrl = `${process.env.REACT_APP_BACKEND_URL}/api/video-player`;
   const storageKey = `resume_${media.aliasRoute}_${media.folder}_${media.title}`;
 
+  const videoSrc = audioFallback
+    ? `${baseUrl}/audio-fix/${media.aliasRoute}/${media.folder}/${media.title}`
+    : `${baseUrl}/${media.aliasRoute}/${media.folder}/${media.title}`;
 
-
-  // Auto-ocultar controles
   const handleActivity = useCallback(() => {
     setShowUI(true);
     if (window.hideTimer) clearTimeout(window.hideTimer);
@@ -33,6 +35,19 @@ const VideoPlayer = ({ media, onClose }) => {
     };
     fetchSubs();
   }, [media, baseUrl]);
+
+  // Si el audio no suena (evento 'stalled'/'error' en pista de audio no es directamente
+  // detectable, pero el navegador SÍ emite 'error' cuando el códec no es soportado en absoluto;
+  // para audio silencioso sin error de decodificación, damos al usuario un botón manual también)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const handleError = () => {
+      if (!audioFallback) setAudioFallback(true);
+    };
+    video.addEventListener('error', handleError);
+    return () => video.removeEventListener('error', handleError);
+  }, [audioFallback]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -65,7 +80,7 @@ const VideoPlayer = ({ media, onClose }) => {
 
   return (
     <div
-    ref={playerContainerRef}
+      ref={playerContainerRef}
       className={`${styles.overlay} ${!showUI ? styles.hideCursor : ''}`}
       onMouseMove={handleActivity}
       onClick={handleActivity}
@@ -74,6 +89,7 @@ const VideoPlayer = ({ media, onClose }) => {
 
       <div className={styles.videoWrapper} onClick={togglePlay}>
         <video
+          key={videoSrc}
           ref={videoRef}
           autoPlay
           onLoadedMetadata={handleLoadedMetadata}
@@ -85,19 +101,8 @@ const VideoPlayer = ({ media, onClose }) => {
           crossOrigin="anonymous"
           className={styles.videoElement}
         >
-          <source src={`${baseUrl}/${media.aliasRoute}/${media.folder}/${media.title}`} type="video/mp4" />
-          {/* IMPORTANTE: Estos tracks deben estar aquí para que el navegador los detecte */}
-          {subtitles.map((track, index) => (
-            <track
-              key={index}
-              kind="subtitles"
-              label={track.tags?.language?.toUpperCase() || `Pista ${index + 1}`}
-              src={`${baseUrl}/subs-file/${media.aliasRoute}/${media.folder}/${media.title}/${track.index}`}
-              srcLang={track.tags?.language || 'es'}
-              // Por defecto todos desactivados
-              default={false}
-            />
-          ))}
+          {/* Sin "type" fijo: dejamos que el navegador use el Content-Type real de la cabecera */}
+          <source src={videoSrc} />
         </video>
       </div>
 
@@ -108,7 +113,11 @@ const VideoPlayer = ({ media, onClose }) => {
         visible={showUI}
         title={media.title}
         subtitles={subtitles}
+        baseUrl={baseUrl}
+        media={media}
         playerContainerRef={playerContainerRef}
+        onFixAudio={() => setAudioFallback(true)}
+        audioFallback={audioFallback}
       />
     </div>
   );

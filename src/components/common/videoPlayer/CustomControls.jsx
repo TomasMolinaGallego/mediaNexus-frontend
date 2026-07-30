@@ -5,7 +5,7 @@ import { MdSubtitles } from 'react-icons/md';
 
 const CustomControls = ({
   videoRef, isPlaying, togglePlay, visible, title,
-  subtitles, playerContainerRef, baseUrl, media
+  subtitles, playerContainerRef, baseUrl, media, onFixAudio, audioFallback
 }) => {
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -99,6 +99,11 @@ const CustomControls = ({
             <input type="range" min="0" max="1" step="0.05" value={isMuted ? 0 : volume} onChange={handleVolumeChange} className={styles.volumeSlider} />
           </div>
 
+          {!audioFallback && (
+            <button onClick={onFixAudio} title="Si no escuchas audio, pulsa aquí">
+              🔧 Arreglar audio
+            </button>
+          )}
         </div>
 
         <div className={styles.rightBtns}>

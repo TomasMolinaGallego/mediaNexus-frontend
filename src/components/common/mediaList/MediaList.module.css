@@ -1,228 +1,145 @@
+/* --- CONTENEDOR PRINCIPAL --- */
 .listContainer {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
   padding: 20px;
+  font-family: var(--font-family, sans-serif);
 }
 
-.mediaGrid {
-  display: grid;
-  /* El auto-fill es perfecto, pero bajamos el gap en pantallas pequeñas */
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 30px;
-  list-style: none; /* Quitamos los puntos de la lista */
-  padding: 0;
-  margin: 0;
-  
-  /* Optimizamos la animación para que el navegador la procese mejor */
-  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform;
+.emptyState {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-dim, #888);
 }
 
-.gridItem {
-  /* Aseguramos que el li ocupe todo el alto para que MediaCard luzca bien */
+/* --- CONTROLES GLOBALES --- */
+.globalControls {
   display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-main, #333);
+  padding-bottom: 15px;
 }
 
-/* --- Accesibilidad: Texto solo para lectores de pantalla --- */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-  .mediaGrid {
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 20px;
-  }
-}
-
-@media (max-width: 600px) {
-  .mediaGrid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-  }
-  .listContainer {
-    padding: 10px;
-  }
-}
-
-/* --- Estados --- */
-.loadingWrapper {
+.controlBtn {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 50vh;
-  gap: 24px;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border-main, #333);
+  color: var(--text-dim, #ccc);
+  padding: 8px 16px;
+  border-radius: var(--radius, 6px);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-.circle {
-  width: 14px;
-  height: 14px;
-  background-color: #e50914;
-  border-radius: 50%;
-  animation: pulse 1.2s infinite ease-in-out;
+.controlBtn:hover {
+  background: var(--input-bg, #222);
+  color: var(--accent, #e50914);
+  border-color: var(--accent, #e50914);
 }
 
-/* Keyframes optimizados */
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(10px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
-  }
+/* NieR theme adaptation */
+[data-theme='nier'] .controlBtn {
+  border: 2px solid #605c4e;
+  background: #d1cdb7;
+  color: #605c4e;
+  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 1; }
-}
-
-/* --- SKELETON BASE --- */
-.skeletonCard {
-  background: #1a1a1a;
-  border-radius: 12px;
-  height: 250px; /* Misma altura que tus tarjetas */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.skeletonImage {
-  aspect-ratio: 16 / 9;
-  background: #252525;
-  position: relative;
-  overflow: hidden;
-}
-
-.skeletonContent {
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.skeletonTitle {
-  height: 14px;
-  width: 80%;
-  background: #252525;
-  border-radius: 4px;
-}
-
-.skeletonFooter {
-  height: 10px;
-  width: 40%;
-  background: #252525;
-  border-radius: 4px;
-  margin-top: auto;
-}
-
-/* --- ANIMACIÓN SHIMMER (El brillo) --- */
-.skeletonImage::after,
-.skeletonTitle::after,
-.skeletonFooter::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  transform: translateX(-100%);
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.03) 20%,
-    rgba(255, 255, 255, 0.06) 60%,
-    rgba(255, 255, 255, 0)
-  );
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
+/* --- SECCIONES Y CABECERAS DE TEMPORADA --- */
 .seasonSection {
-  margin-bottom: 60px;
-}
-
-.seasonTitle {
-  font-size: 1.8rem;
-  color: #ffffff;
-  margin-bottom: 25px;
-  border-left: 5px solid #e50914; /* Rojo para temporadas */
-  padding-left: 15px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-/* Estilo especial para la sección de OVAs */
-.ovaTitle {
-  border-left-color: #00a8ff; /* Azul o Dorado para diferenciar */
-  color: #00a8ff;
-  letter-spacing: 2px;
-}
-
-.mediaGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 25px;
-  list-style: none;
-  padding: 0;
-}
-
-/* --- CONTENEDOR Y GRID --- */
-.listContainer {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: var(--font-family);
-}
-
-.seasonSection {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.seasonHeader {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  padding: 8px 0;
+  transition: background 0.2s ease;
+}
+
+.seasonHeader.clickable {
+  cursor: pointer;
+}
+
+.seasonHeader.clickable:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.seasonHeader.clickable:hover .seasonTitle {
+  color: var(--accent, #e50914);
+  filter: brightness(1.2);
+}
+
 .seasonTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
   font-size: 1.8rem;
-  color: var(--text-color);
-  margin-bottom: 25px;
-  border-left: 5px solid var(--accent);
+  color: var(--text-color, #fff);
+  border-left: 5px solid var(--accent, #e50914);
   padding-left: 15px;
   font-weight: 800;
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-/* Estilo especial para la sección de OVAs */
 .ovaTitle {
-  /* En Netflix es azul, en los demás sigue el acento o un tono derivado */
   border-left-color: #00a8ff; 
   color: #00a8ff;
-  
-  /* Adaptación para temas no-netflix */
-  [data-theme='nier'] & { border-left-color: #605c4e; color: #605c4e; }
-  [data-theme='tactical'] & { border-left-color: #00f2ff; color: #00f2ff; filter: brightness(1.5); }
 }
 
+[data-theme='nier'] .ovaTitle { border-left-color: #605c4e; color: #605c4e; }
+[data-theme='tactical'] .ovaTitle { border-left-color: #00f2ff; color: #00f2ff; filter: brightness(1.5); }
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.episodeCount {
+  font-size: 1rem;
+  opacity: 0.5;
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+/* --- COLAPSO ANIMADO (GRID CSS) --- */
+.collapsibleContent {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.collapsibleContent.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  padding-bottom: 20px;
+}
+
+.gridWrapper {
+  min-height: 0;
+  padding-top: 10px;
+}
+
+/* --- GRID DE TARJETAS --- */
 .mediaGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 25px;
   list-style: none;
   padding: 0;
@@ -233,11 +150,11 @@
   display: flex;
 }
 
-/* --- SKELETON ADAPTATIVO --- */
+/* --- SKELETON LOADING --- */
 .skeletonCard {
-  background: var(--card-bg);
-  border: 1px solid var(--border-main);
-  border-radius: var(--radius);
+  background: var(--card-bg, #1a1a1a);
+  border: 1px solid var(--border-main, #333);
+  border-radius: var(--radius, 8px);
   height: 250px;
   display: flex;
   flex-direction: column;
@@ -247,7 +164,7 @@
 
 .skeletonImage {
   aspect-ratio: 16 / 9;
-  background: var(--input-bg);
+  background: var(--input-bg, #252525);
   position: relative;
   overflow: hidden;
 }
@@ -260,7 +177,7 @@
 }
 
 .skeletonTitle, .skeletonFooter {
-  background: var(--border-main);
+  background: var(--border-main, #333);
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -269,7 +186,6 @@
 .skeletonTitle { height: 14px; width: 80%; }
 .skeletonFooter { height: 10px; width: 40%; margin-top: auto; }
 
-/* --- ANIMACIÓN SHIMMER DINÁMICA --- */
 .skeletonImage::after,
 .skeletonTitle::after,
 .skeletonFooter::after {
@@ -287,17 +203,16 @@
   animation: shimmer 1.5s infinite;
 }
 
-/* --- LOADING PULSE --- */
-.circle {
-  width: 14px;
-  height: 14px;
-  background-color: var(--accent);
-  border-radius: 50%;
-  animation: pulse 1.2s infinite ease-in-out;
-  box-shadow: 0 0 10px var(--accent);
+/* --- ANIMACIONES & MEDIA QUERIES --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- RESPONSIVE --- */
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
 @media (max-width: 1024px) {
   .mediaGrid {
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -310,246 +225,6 @@
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
   }
+  .listContainer { padding: 10px; }
   .seasonTitle { font-size: 1.4rem; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 1; }
-}
-
-.seasonHeader {
-  display: flex;
-  align-items: center;
-  user-select: none;
-  margin-bottom: 20px;
-}
-
-.seasonHeader.clickable {
-  cursor: pointer;
-}
-
-.seasonHeader.clickable:hover .seasonTitle {
-  color: var(--accent);
-  filter: brightness(1.2);
-}
-
-.seasonTitle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 0 !important; /* Sobreescribimos el anterior */
-  font-size: 1.8rem;
-  color: var(--text-color);
-  border-left: 5px solid var(--accent);
-  padding-left: 15px;
-  font-weight: 800;
-  text-transform: uppercase;
-  transition: all 0.2s ease;
-}
-
-.iconWrapper {
-  display: flex;
-  align-items: center;
-  font-size: 1.5rem;
-}
-
-.episodeCount {
-  font-size: 1rem;
-  opacity: 0.5;
-  font-weight: 400;
-  margin-left: 10px;
-}
-
-/* Lógica de Colapso */
-.collapsibleContent {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease-out, opacity 0.2s ease;
-  opacity: 0;
-  overflow: hidden;
-}
-
-.collapsibleContent.open {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  padding-bottom: 40px; /* Espacio para que no se pegue a la siguiente temporada */
-}
-
-.collapsibleContent.closed {
-  visibility: hidden;
-}
-
-/* Aseguramos que la grid interna se vea correctamente dentro del colapso */
-.collapsibleContent > ul {
-  min-height: 0;
-}
-
-.globalControls {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-main);
-  padding-bottom: 15px;
-}
-
-.controlBtn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: 1px solid var(--border-main);
-  color: var(--text-dim);
-  padding: 8px 16px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.controlBtn:hover {
-  background: var(--input-bg);
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.seasonSection {
-  margin-bottom: 40px;
-}
-
-.gridWrapper {
-  min-height: 0; /* Crucial para la animación del grid rows */
-  padding-top: 10px;
-}
-
-/* Mejora de la animación: Usamos un Grid para animar altura desconocida */
-.collapsibleContent {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.collapsibleContent.open {
-  grid-template-rows: 1fr;
-  opacity: 1;
-  visibility: visible;
-  padding-bottom: 20px;
-}
-
-/* El header ahora tiene un hover más sutil */
-.seasonHeader.clickable {
-  transition: background 0.2s ease;
-  border-radius: 8px;
-  padding: 8px 0;
-}
-
-.seasonHeader.clickable:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* NieR theme adaptation */
-[data-theme='nier'] .controlBtn {
-  border: 2px solid #605c4e;
-  background: #d1cdb7;
-  color: #605c4e;
-  clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%);
-}
-
-/* MediaList.module.css */
-.card {
-  animation: slideUp 0.4s ease-out forwards;
-  opacity: 0;
-}
-
-@keyframes slideUp {
-  from { 
-    opacity: 0;
-    transform: translateY(20px); 
-  }
-  to { 
-    opacity: 1;
-    transform: translateY(0); 
-  }
-}
-
-/* Aplicar delay progresivo a las tarjetas */
-.card:nth-child(1) { animation-delay: 0.05s; }
-.card:nth-child(2) { animation-delay: 0.1s; }
-.card:nth-child(3) { animation-delay: 0.15s; }
-
-[data-theme='yorha'] .card {
-  border: 1px solid #000;
-  background: #fff;
-  transition: all 0.2s;
-}
-
-[data-theme='yorha'] .card:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0px #000;
-}
-
-[data-theme='yorha'] .cardTitle {
-  background: #000;
-  color: #fff;
-  padding: 5px;
-  text-align: center;
-  font-size: 0.7rem;
-}
-
-/* Imagen en blanco y negro suave hasta que haces hover */
-[data-theme='yorha'] .cardImage {
-  filter: grayscale(1) contrast(1.2);
-  transition: filter 0.3s;
-}
-
-[data-theme='yorha'] .card:hover .cardImage {
-  filter: grayscale(0.5);
-}
-
-/* Contenedor de la tarjeta */
-[data-theme='yorha'] .card {
-  opacity: 0;
-  animation: yorha-data-stream 0.4s ease-out forwards;
-}
-
-/* Retraso progresivo para las primeras 12 tarjetas (N-th child) */
-[data-theme='yorha'] .card:nth-child(1)  { animation-delay: 0.05s; }
-[data-theme='yorha'] .card:nth-child(2)  { animation-delay: 0.10s; }
-[data-theme='yorha'] .card:nth-child(3)  { animation-delay: 0.15s; }
-[data-theme='yorha'] .card:nth-child(4)  { animation-delay: 0.20s; }
-[data-theme='yorha'] .card:nth-child(5)  { animation-delay: 0.25s; }
-[data-theme='yorha'] .card:nth-child(6)  { animation-delay: 0.30s; }
-/* ... añade más si es necesario ... */
-
-@keyframes yorha-data-stream {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scaleX(0.9);
-    filter: brightness(3); /* Parpadeo inicial blanco */
-  }
-  50% {
-    opacity: 0.5;
-    filter: brightness(1);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-2px) scaleX(1.02); /* Pequeño rebote técnico */
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scaleX(1);
-    filter: brightness(1);
-  }
 }

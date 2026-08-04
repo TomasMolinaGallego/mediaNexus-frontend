@@ -1,8 +1,8 @@
 /* ============================================================
    VARIABLES DE TEMA (Root y Modos)
    ============================================================ */
-
-:root, [data-theme='netflix'] {
+:root,
+[data-theme='netflix'] {
   --bg-main: #0a0a0a;
   --bg-secondary: #141414;
   --text-color: #ffffff;
@@ -13,7 +13,6 @@
   --radius: 8px;
   --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --clip-path: none;
-  --header-height: 120px;
 }
 
 [data-theme='nier'] {
@@ -26,7 +25,6 @@
   --border-main: #454138;
   --radius: 0px;
   --font-family: 'Segoe UI', serif;
-  /* El clipping característico de NieR */
   --clip-path: polygon(4% 0, 100% 0, 96% 100%, 0% 100%);
 }
 
@@ -46,323 +44,6 @@
 /* ============================================================
    HEADER Y NAVEGACIÓN
    ============================================================ */
-
-.header {
-  background: var(--bg-main);
-  border-bottom: 1px solid var(--border-main);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  padding: 1rem 0;
-  font-family: var(--font-family);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.headerContent {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.topRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.title {
-  color: var(--text-color);
-  font-size: 1.5rem;
-  font-weight: 900;
-  cursor: pointer;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.title span {
-  color: var(--accent);
-}
-
-[data-theme='nier'] .title span {
-  background: var(--accent);
-  color: var(--bg-main);
-  padding: 0 5px;
-  margin-left: 5px;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.themeSwitcher {
-  background: transparent;
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  padding: 6px 12px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  cursor: pointer;
-  clip-path: var(--clip-path);
-  transition: all 0.2s;
-}
-
-.themeSwitcher:hover {
-  background: var(--accent);
-  color: #fff;
-}
-
-/* ============================================================
-   CONTROLES Y BÚSQUEDA
-   ============================================================ */
-
-.controlsRow {
-  display: grid;
-  grid-template-columns: auto 1fr 1fr;
-  gap: 15px;
-  align-items: center;
-}
-
-.searchWrapper {
-  position: relative;
-  width: 100%;
-}
-
-.searchBar {
-  width: 100%;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  padding: 0.7rem 1rem;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  transition: border-color 0.3s;
-}
-
-.searchBar:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-
-.backButton {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  padding: 0.7rem 1.5rem;
-  font-weight: 900;
-  cursor: pointer;
-  clip-path: var(--clip-path);
-}
-
-/* ============================================================
-   MODAL (SETTINGS) - Diseñado para Portal
-   ============================================================ */
-
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  backdrop-filter: blur(4px);
-  padding: 20px;
-}
-
-.modalContent {
-  background: var(--bg-main);
-  border: 2px solid var(--border-main);
-  border-radius: var(--radius);
-  width: 100%;
-  max-width: 650px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  animation: modalSlideUp 0.3s ease-out;
-}
-
-.modalHeader {
-  padding: 20px;
-  border-bottom: 1px solid var(--border-main);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modalBody {
-  padding: 20px;
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-.directoryCard {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-main);
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: var(--radius);
-}
-
-.cardGrid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 10px;
-}
-
-.fullWidth { grid-column: span 2; }
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.inputGroup label {
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: var(--text-dim);
-}
-
-.inputGroup input {
-  background: var(--bg-main);
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  padding: 8px;
-  border-radius: 4px;
-}
-
-/* ============================================================
-   ANIMACIONES
-   ============================================================ */
-
-@keyframes modalSlideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-
-@media (max-width: 768px) {
-  .controlsRow {
-    grid-template-columns: 1fr;
-  }
-  
-  .headerContent {
-    padding: 0 1rem;
-  }
-
-  .title { font-size: 1.1rem; }
-}
-
-.searchSection {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.tabContainer {
-  display: flex;
-  gap: 5px;
-  padding-left: 5px;
-}
-
-.tab {
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  font-weight: 800;
-  padding: 6px 15px;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.tab:hover {
-  color: var(--text-color);
-}
-
-.activeTab {
-  color: var(--accent) !important;
-}
-
-/* Subrayado animado para Netflix */
-.activeTab::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 15%;
-  right: 15%;
-  height: 3px;
-  background: var(--accent);
-  border-radius: 3px 3px 0 0;
-}
-
-/* Estilo de bloques para NieR */
-[data-theme='nier'] .activeTab {
-  background: var(--accent);
-  color: var(--bg-main) !important;
-  clip-path: var(--clip-path);
-}
-[data-theme='nier'] .activeTab::after { display: none; }
-
-/* Estilo Neón para Tactical */
-[data-theme='tactical'] .activeTab {
-  text-shadow: 0 0 8px var(--accent);
-  border: 1px solid var(--accent);
-  clip-path: var(--clip-path);
-}
-
-.searchWrapper {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.inputContainer {
-  position: relative;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-}
-
-.searchIcon {
-  position: absolute;
-  left: 15px;
-  font-size: 0.9rem;
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.searchBar {
-  width: 100%;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  padding: 0.8rem 1rem 0.8rem 2.8rem; /* Espacio para el icono */
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-/* Efecto visual al cambiar de modo */
-.searchBar:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.1);
-}
-
 .header {
   background: var(--bg-main);
   border-bottom: 1px solid var(--border-main);
@@ -389,183 +70,58 @@
   align-items: center;
 }
 
+.brand {
+  cursor: pointer;
+  user-select: none;
+}
+
 .title {
   color: var(--text-color);
   font-size: 1.4rem;
   font-weight: 900;
-  cursor: pointer;
   margin: 0;
-}
-
-.title span { color: var(--accent); }
-
-.actions { display: flex; gap: 12px; }
-
-.themeSwitcher {
-  background: transparent;
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  padding: 5px 12px;
-  font-size: 0.7rem;
-  font-weight: 800;
-  cursor: pointer;
-  clip-path: var(--clip-path);
-}
-
-.settingsBtn {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  width: 35px; height: 35px; border-radius: 50%;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-}
-
-/* SECCIÓN BUSCADOR */
-.searchSection {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.tabContainer {
-  display: flex;
-  gap: 4px;
-}
-
-.tab {
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  font-weight: 800;
-  padding: 8px 16px;
-  cursor: pointer;
   text-transform: uppercase;
-  transition: all 0.2s;
-}
-
-.activeTab {
-  color: var(--accent) !important;
-  border-bottom: 2px solid var(--accent);
-}
-
-/* NieR Theme adapt para tabs */
-[data-theme='nier'] .activeTab {
-  background: var(--accent);
-  color: var(--bg-main) !important;
-  clip-path: var(--clip-path);
-  border: none;
-}
-
-.searchWrapper {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.inputContainer {
   position: relative;
-  flex-grow: 1;
 }
 
-.searchIcon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.6;
+.title span {
+  color: var(--accent);
 }
 
-.searchBar {
-  width: 100%;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-main);
-  color: var(--text-color);
-  padding: 0.8rem 2.5rem;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.searchBar:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.clearBtn {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-.backButton {
+[data-theme='nier'] .title span {
   background: var(--accent);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.2rem;
-  border-radius: var(--radius);
-  font-weight: 800;
-  cursor: pointer;
-  clip-path: var(--clip-path);
+  color: var(--bg-main);
+  padding: 0 5px;
+  margin-left: 5px;
 }
 
+/* Efecto Glitch YoRHa en el Título */
 [data-theme='yorha'] .header {
   background: var(--bg-main);
   border-bottom: 3px solid #000;
 }
 
-[data-theme='yorha'] .searchBar {
-  background: transparent;
-  border: 2px solid #000;
-  color: #000;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-[data-theme='yorha'] .tab.activeTab {
-  background: #999999;
-  color: #fff;
-  clip-path: polygon(0 0, 100% 0, 100% 75%, 85% 100%, 0 100%);
-}
-
-[data-theme='yorha'] .inputContainer::before {
-  content: ">";
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-weight: bold;
-}
-
 [data-theme='yorha'] .title {
-  position: relative;
   color: #000;
-  /* El texto base es negro */
 }
 
-/* Pseudo-elemento para el efecto rojo */
 [data-theme='yorha'] .title::before {
   content: "ALEXANDRIA";
   position: absolute;
-  top: 0; left: 0;
-  color: #ff0000; /* Rojo */
+  top: 0;
+  left: 0;
+  color: #ff0000;
   opacity: 0.7;
   z-index: -1;
   animation: yorha-chroma-red 4s infinite;
 }
 
-/* Pseudo-elemento para el efecto azul */
 [data-theme='yorha'] .title::after {
   content: "ALEXANDRIA";
   position: absolute;
-  top: 0; left: 0;
-  color: #00ffff; /* Cian */
+  top: 0;
+  left: 0;
+  color: #00ffff;
   opacity: 0.7;
   z-index: -2;
   animation: yorha-chroma-blue 4s infinite;
@@ -575,14 +131,38 @@
   0%, 100% { transform: translate(0, 0); }
   2% { transform: translate(2px, 1px); }
   4% { transform: translate(-1px, -1px); }
-  6% { transform: translate(0, 0); } /* Glitch rápido */
+  6% { transform: translate(0, 0); }
 }
 
 @keyframes yorha-chroma-blue {
   0%, 100% { transform: translate(0, 0); }
   3% { transform: translate(-2px, -1px); }
   5% { transform: translate(1px, 1px); }
-  7% { transform: translate(0, 0); } /* Glitch rápido desfasado */
+  7% { transform: translate(0, 0); }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.settingsBtn {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-main);
+  color: var(--text-color);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.settingsBtn:hover {
+  border-color: var(--accent);
 }
 
 .themeDropdownWrapper {
@@ -592,31 +172,29 @@
 }
 
 .themeSelect {
-  appearance: none; /* Quita la flecha por defecto */
+  appearance: none;
   -webkit-appearance: none;
   background: rgba(0, 0, 0, 0.2);
-  color: inherit; /* Hereda el color del texto del tema */
+  color: inherit;
   border: 1px solid currentColor;
   padding: 8px 30px 8px 15px;
   font-family: inherit;
   font-size: 0.8rem;
   cursor: pointer;
   outline: none;
-  border-radius: 4px;
+  border-radius: var(--radius);
   text-transform: uppercase;
   letter-spacing: 1px;
-  /* Flecha personalizada */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
 }
 
 .themeSelect option {
-  background-color: var(--bg-card, #222); /* Se adapta al fondo de la card del tema */
-  color: var(--text-primary, #fff);
+  background-color: var(--bg-main);
+  color: var(--text-color);
 }
 
-/* Adaptación específica para FF13 */
 [data-theme='ff13'] .themeSelect {
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
@@ -624,7 +202,6 @@
   border: 1px solid rgba(0, 210, 255, 0.3);
 }
 
-/* Adaptación específica para NIER / YORHA */
 [data-theme='nier'] .themeSelect,
 [data-theme='yorha'] .themeSelect {
   background-color: transparent;
@@ -641,4 +218,309 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+/* ============================================================
+   SECCIÓN BÚSQUEDA Y TABS
+   ============================================================ */
+.searchSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.tabContainer {
+  display: flex;
+  gap: 5px;
+  padding-left: 5px;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tab:hover {
+  color: var(--text-color);
+}
+
+.activeTab {
+  color: var(--accent) !important;
+  border-bottom: 2px solid var(--accent);
+}
+
+[data-theme='nier'] .activeTab {
+  background: var(--accent);
+  color: var(--bg-main) !important;
+  clip-path: var(--clip-path);
+  border-bottom: none;
+}
+
+[data-theme='tactical'] .activeTab {
+  text-shadow: 0 0 8px var(--accent);
+  border: 1px solid var(--accent);
+  clip-path: var(--clip-path);
+}
+
+[data-theme='yorha'] .tab.activeTab {
+  background: #999999;
+  color: #fff !important;
+  clip-path: polygon(0 0, 100% 0, 100% 75%, 85% 100%, 0 100%);
+  border-bottom: none;
+}
+
+.searchWrapper {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.inputContainer {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.searchBar {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-main);
+  color: var(--text-color);
+  padding: 0.8rem 2.5rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.searchBar:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='yorha'] .searchBar {
+  background: transparent;
+  border: 2px solid #000;
+  color: #000;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.clearBtn {
+  position: absolute;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backButton {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius);
+  font-weight: 800;
+  cursor: pointer;
+  clip-path: var(--clip-path);
+}
+
+/* ============================================================
+   MODAL (SETTINGS)
+   ============================================================ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  padding: 20px;
+}
+
+.modalContent {
+  background: var(--bg-main);
+  border: 2px solid var(--border-main);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+.modalHeader {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-main);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modalBody {
+  padding: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.scrollArea {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.directoryCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-main);
+  padding: 15px;
+  border-radius: var(--radius);
+  position: relative;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+
+.fullWidth {
+  grid-column: span 2;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inputGroup label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--text-dim);
+}
+
+.inputGroup input,
+.driveSelect {
+  background: var(--bg-main);
+  border: 1px solid var(--border-main);
+  color: var(--text-color);
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.removeCardBtn {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addBtn {
+  width: 100%;
+  background: transparent;
+  border: 1px dashed var(--border-main);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: var(--radius);
+  font-weight: bold;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.addBtn:hover {
+  border-color: var(--accent);
+}
+
+.modalFooter {
+  padding: 15px 20px;
+  border-top: 1px solid var(--border-main);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.saveButton {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes modalSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerContent {
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: span 1;
+  }
 }

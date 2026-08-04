@@ -11,20 +11,20 @@
   padding: 0;
   font-size: 0.65rem;
   text-transform: uppercase;
-  color: #555;
-  margin-bottom: 4px;
+  color: var(--text-dim, #666);
+  margin: 0 0 4px 0;
   letter-spacing: 1.5px;
   font-weight: 700;
 }
 
 /* --- TARJETA DEL ÚLTIMO VISTO --- */
 .lastWatchedCard {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border-radius: var(--radius, 8px);
   padding: 10px;
   display: flex;
   gap: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-main, rgba(255, 255, 255, 0.05));
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -33,8 +33,8 @@
 }
 
 .lastWatchedCard:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(229, 9, 20, 0.4);
+  background: var(--input-bg, rgba(255, 255, 255, 0.07));
+  border-color: var(--accent, rgba(229, 9, 20, 0.4));
   transform: translateY(-2px);
 }
 
@@ -44,10 +44,10 @@
   width: 50px;
   height: 70px;
   flex-shrink: 0;
-  border-radius: 6px;
+  border-radius: var(--radius, 4px);
   overflow: hidden;
   background: #111;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .imageWrapper img {
@@ -59,18 +59,22 @@
 .playOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(229, 9, 20, 0.6);
+  background: var(--accent, rgba(229, 9, 20, 0.6));
+  opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
   transition: opacity 0.2s ease;
-  color: white;
+  color: #fff;
   font-size: 1.2rem;
 }
 
+[data-theme='nier'] .playOverlay {
+  color: #d1cdb7;
+}
+
 .lastWatchedCard:hover .playOverlay {
-  opacity: 1;
+  opacity: 0.85;
 }
 
 /* --- INFORMACIÓN DEL EPISODIO --- */
@@ -79,22 +83,22 @@
   flex-direction: column;
   justify-content: center;
   flex: 1;
-  min-width: 0; /* CRÍTICO: Permite que el texto se trunque */
+  min-width: 0; /* Crítico para el truncado de texto */
 }
 
 .seriesName {
   font-size: 0.85rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-color, #fff);
   margin: 0 0 4px 0;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Puntos suspensivos si el nombre es largo */
+  text-overflow: ellipsis;
 }
 
 .episodeLabel {
   font-size: 0.7rem;
-  color: #888;
+  color: var(--text-dim, #888);
   margin-bottom: 8px;
   display: block;
 }
@@ -102,7 +106,7 @@
 /* --- BARRA DE PROGRESO MINI --- */
 .miniProgress {
   height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-main, rgba(255, 255, 255, 0.1));
   border-radius: 2px;
   width: 100%;
   overflow: hidden;
@@ -110,8 +114,8 @@
 
 .progressBar {
   height: 100%;
-  background: #e50914;
-  box-shadow: 0 0 8px rgba(229, 9, 20, 0.5);
+  background: var(--accent, #e50914);
+  box-shadow: 0 0 8px var(--accent, rgba(229, 9, 20, 0.5));
 }
 
 /* --- BOTONES DE ACCIÓN --- */
@@ -122,10 +126,11 @@
   width: 100%;
 }
 
-.primaryAction, .secondaryAction {
+.primaryAction,
+.secondaryAction {
   width: 100%;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: var(--radius, 8px);
   font-size: 0.7rem;
   font-weight: 700;
   cursor: pointer;
@@ -137,48 +142,53 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-sizing: border-box;
+  clip-path: var(--clip-path, none);
 }
 
 /* Botón "Volver a ver" */
 .primaryAction {
-  background: #1a1a1a;
-  color: #ccc;
-  border: 1px solid #333;
+  background: var(--input-bg, #1a1a1a);
+  color: var(--text-dim, #ccc);
+  border: 1px solid var(--border-main, #333);
 }
 
 .primaryAction:hover {
-  background: #252525;
-  color: #fff;
-  border-color: #555;
+  background: var(--card-bg, #252525);
+  color: var(--text-color, #fff);
+  border-color: var(--border-main, #555);
 }
 
 /* Botón "Siguiente" */
 .secondaryAction {
-  background: #e50914;
-  color: white;
+  background: var(--accent, #e50914);
+  color: #fff;
   border: none;
-  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='nier'] .secondaryAction {
+  color: #d1cdb7;
 }
 
 .secondaryAction:hover {
-  background: #ff0a16;
+  filter: brightness(1.15);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* --- ESTADO VACÍO --- */
 .noLastWatched {
   padding: 30px 20px;
   text-align: center;
-  color: #444;
+  color: var(--text-dim, #444);
   font-size: 0.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  border: 1px dashed #222;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.01);
+  border: 1px dashed var(--border-main, #222);
+  border-radius: var(--radius, 12px);
+  background: rgba(255, 255, 255, 0.01);
 }
 
 .noLastWatched p {
@@ -189,190 +199,12 @@
 /* --- AJUSTES RESPONSIVOS --- */
 @media (max-width: 768px) {
   .lastWatchedCard {
-    padding: 12px; /* Un poco más de espacio para dedos en móvil */
+    padding: 12px;
   }
-  
-  .primaryAction, .secondaryAction {
-    padding: 12px; /* Botones más altos para mejor touch target */
+
+  .primaryAction,
+  .secondaryAction {
+    padding: 12px;
     font-size: 0.75rem;
   }
-}
-
-/* --- CONTENEDOR PRINCIPAL --- */
-.replayContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.groupTitle {
-  padding: 0;
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  color: var(--text-dim); /* Dinámico */
-  margin-bottom: 4px;
-  letter-spacing: 1.5px;
-  font-weight: 700;
-}
-
-/* --- TARJETA DEL ÚLTIMO VISTO --- */
-.lastWatchedCard {
-  background: var(--card-bg); /* Variable del tema */
-  border-radius: var(--radius); /* 6px en Netflix, 0px en Nier */
-  padding: 10px;
-  display: flex;
-  gap: 12px;
-  border: 1px solid var(--border-main);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-  align-items: center;
-}
-
-.lastWatchedCard:hover {
-  background: var(--input-bg);
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
-
-/* --- MANEJO DE IMAGEN --- */
-.imageWrapper {
-  position: relative;
-  width: 50px;
-  height: 70px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #111;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-.imageWrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.playOverlay {
-  position: absolute;
-  inset: 0;
-  background: var(--accent); /* Rojo Netflix / Cian Tactical / Marrón Nier */
-  opacity: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
-  color: #fff;
-  font-size: 1.2rem;
-}
-
-/* En Nier, el overlay de play se ve mejor con el color de texto */
-[data-theme='nier'] .playOverlay { color: #d1cdb7; }
-
-.lastWatchedCard:hover .playOverlay {
-  opacity: 0.8;
-}
-
-/* --- INFORMACIÓN DEL EPISODIO --- */
-.seriesName {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--text-color);
-  margin: 0 0 4px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.episodeLabel {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  margin-bottom: 8px;
-  display: block;
-}
-
-/* --- BARRA DE PROGRESO MINI --- */
-.miniProgress {
-  height: 4px;
-  background: var(--border-main);
-  border-radius: 2px;
-  width: 100%;
-  overflow: hidden;
-}
-
-.progressBar {
-  height: 100%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-
-/* --- BOTONES DE ACCIÓN --- */
-.actionButtons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.primaryAction, .secondaryAction {
-  width: 100%;
-  padding: 10px;
-  border-radius: var(--radius);
-  font-size: 0.7rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-sizing: border-box;
-  clip-path: var(--clip-path); /* Para formas poligonales */
-}
-
-/* Botón "Volver a ver" (Estilo neutral) */
-.primaryAction {
-  background: var(--input-bg);
-  color: var(--text-dim);
-  border: 1px solid var(--border-main);
-}
-
-.primaryAction:hover {
-  background: var(--card-bg);
-  color: var(--text-color);
-}
-
-/* Botón "Siguiente" (Estilo destacado) */
-.secondaryAction {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-[data-theme='nier'] .secondaryAction { color: #d1cdb7; }
-
-.secondaryAction:hover {
-  filter: brightness(1.2);
-  transform: translateY(-2px);
-}
-
-/* --- ESTADO VACÍO --- */
-.noLastWatched {
-  padding: 30px 20px;
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  border: 1px dashed var(--border-main);
-  border-radius: var(--radius);
-  background: rgba(255,255,255,0.01);
 }

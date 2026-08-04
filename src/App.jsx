@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { Toaster } from 'sonner';
 
-// Componentes y Estilos
 import Header from './components/layout/header/Header';
 import Sidebar from './components/layout/sidebar/SideBar';
 import ConfigurationPanel from './components/layout/configurationPanel/ConfigurationPanel.jsx';
 import MediaList from './components/common/mediaList/MediaList';
 import MediaDetails from './components/common/mediaDetails/MediaDetails';
 import VideoPlayer from './components/common/videoPlayer/VideoPlayer';
+import BulletHell from './components/games/BulletHell.jsx';
+
 import { useMediaHooksManager } from './hooks/mediaHooksManager.ts';
 import styles from './styles/App.module.css';
-import BulletHell from './components/games/BulletHell.jsx';
 
 const FILTER_STATUSES = ['Todos', 'Viendo', 'Pendiente', 'Completado', 'Abandonado'];
 const STORAGE_DISKS = [
@@ -21,10 +21,11 @@ const STORAGE_DISKS = [
 function App() {
   const [currentView, setCurrentView] = useState('library');
   const [activeVideo, setActiveVideo] = useState(null);
-  const [searchMode, setSearchMode] = useState('local'); // Sincronizado con Header
+  const [searchMode, setSearchMode] = useState('local');
   const [theme, setTheme] = useState();
   const [isGameActive, setIsGameActive] = useState(false);
   const [showGlitch, setShowGlitch] = useState(false);
+
   const {
     displayData,
     isInsideMedia,
@@ -44,11 +45,8 @@ function App() {
     downloadEpisode
   } = useMediaHooksManager();
 
-  // Escuchar cuando el tema cambia a YoRHa
   useEffect(() => {
-    // Verifica que 'theme' sea exactamente 'yorha'
     if (theme === 'yorha') {
-      console.log("Activando Glitch YoRHa..."); // Revisa la consola (F12)
       setShowGlitch(true);
 
       const timer = setTimeout(() => {
@@ -57,30 +55,38 @@ function App() {
 
       return () => clearTimeout(timer);
     }
-  }, [theme]); // Se dispara cada vez que el tema cambia
+  }, [theme]);
 
-  // MODO EXCLUYENTE: Evita que se mezclen resultados de tabs anteriores
   const computedMediaList = useMemo(() => {
-    if (searchMode === 'external') {
-      return listExternalSearch || [];
-    }
-    return displayData || [];
+    return searchMode === 'external' ? (listExternalSearch || []) : (displayData || []);
   }, [searchMode, listExternalSearch, displayData]);
 
-  const onMediaInteraction = (path, media) => {
+  const activeEpisodesList = useMemo(() => {
+    if (isInsideMedia && currentMedia?.episodes && Array.isArray(currentMedia.episodes)) {
+      return currentMedia.episodes;
+    }
+    if (isInsideMedia && currentMedia?.items && Array.isArray(currentMedia.items)) {
+      return currentMedia.items;
+    }
+    return computedMediaList;
+  }, [isInsideMedia, currentMedia, computedMediaList]);
+
+  const onMediaInteraction = useCallback((path, media) => {
     if (isInsideMedia) {
       if (media.isDownloaded) {
         setActiveVideo(media);
-        currentMedia.isEpisodeWatched || handleToggleWatched(media, true);
+        if (!currentMedia?.isEpisodeWatched) {
+          handleToggleWatched(media, true);
+        }
       } else {
         downloadEpisode(media.id, media.title);
       }
     } else {
       handleMediaClick(path, media);
     }
-  };
+  }, [isInsideMedia, currentMedia, handleToggleWatched, downloadEpisode, handleMediaClick]);
 
-  const openVideoPlayerFromSidebar = async (mediaItemPath) => {
+  const openVideoPlayerFromSidebar = useCallback(async (mediaItemPath) => {
     if (!mediaItemPath) return;
     const pathParts = mediaItemPath.split('/');
     const title = pathParts.pop();
@@ -96,30 +102,68 @@ function App() {
     } catch (error) {
       console.error('Error synchronizing progress:', error);
     }
-  };
+  }, [lastWatchedEpisode, handleToggleWatched, fetchLastWatched]);
 
-  const activateEndingE = (activate) => {
-    console.log(`activateEndingE called with: ${activate}`);
-    if(activate) {
-      setIsGameActive(true);
-    } else {
-      setIsGameActive(false);
+  const activateEndingE = useCallback((activate) => {
+    setIsGameActive(Boolean(activate));
+  }, []);
+
+  const nextEpisode = useMemo(() => {
+    if (!activeVideo || !activeEpisodesList || activeEpisodesList.length === 0) {
+      return null;
     }
-  }
+
+    const currentIndex = activeEpisodesList.findIndex((item) => {
+      if (item.id && activeVideo.id) {
+        return item.id === activeVideo.id;
+      }
+      return item.title === activeVideo.title && (item.folder === activeVideo.folder || !item.folder);
+    });
+
+    if (currentIndex !== -1 && currentIndex < activeEpisodesList.length - 1) {
+      const nextItem = activeEpisodesList[currentIndex + 1];
+      return {
+        ...nextItem,
+        aliasRoute: nextItem.aliasRoute || activeVideo.aliasRoute,
+        folder: nextItem.folder || activeVideo.folder
+      };
+    }
+
+    return null;
+  }, [activeVideo, activeEpisodesList]);
+
+  const handlePlayNextEpisode = useCallback(
+    async (nextMediaPayload) => {
+      if (!nextMediaPayload) return;
+      setActiveVideo(nextMediaPayload);
+      try {
+        await handleToggleWatched(nextMediaPayload, true);
+        await fetchLastWatched();
+      } catch (error) {
+        console.error('Error actualizando episodio visto:', error);
+      }
+    },
+    [handleToggleWatched, fetchLastWatched]
+  );
 
   const isSettingsView = currentView === 'settings';
-  const navigateToLibrary = () => setCurrentView('library');
+  const navigateToLibrary = useCallback(() => setCurrentView('library'), []);
+  const navigateToSettings = useCallback(() => setCurrentView('settings'), []);
+  const handleCloseVideo = useCallback(() => {
+    setActiveVideo(null);
+    fetchLastWatched();
+  }, [fetchLastWatched]);
 
   return (
     <div className={styles.appContainer}>
-      { isGameActive && <BulletHell onExit={() => setIsGameActive(false)} /> }
+      {isGameActive && <BulletHell onExit={() => setIsGameActive(false)} />}
+
       <Toaster
         richColors
         closeButton
-        theme="dark" // O basarte en tu variable 'theme'
+        theme="dark"
         position="bottom-right"
         toastOptions={{
-          // Esto asegura que la fuente y el estilo base se hereden siempre
           style: { fontFamily: 'var(--font-family)' },
         }}
       />
@@ -127,7 +171,10 @@ function App() {
       {activeVideo && (
         <VideoPlayer
           media={activeVideo}
-          onClose={() => { setActiveVideo(null); fetchLastWatched(); }}
+          nextEpisode={nextEpisode}
+          onClose={handleCloseVideo}
+          onPlayNextEpisode={handlePlayNextEpisode}
+          endingOffsetSeconds={90}
         />
       )}
 
@@ -139,7 +186,7 @@ function App() {
         disks={STORAGE_DISKS}
         onClickLastWatched={openVideoPlayerFromSidebar}
         filterStatuses={FILTER_STATUSES}
-        onSettingsClick={() => setCurrentView('settings')}
+        onSettingsClick={navigateToSettings}
         onLibraryClick={navigateToLibrary}
         isSettingsActive={isSettingsView}
       />
@@ -150,9 +197,9 @@ function App() {
           onExternalSearch={handleExternalSearch}
           onModeChange={setSearchMode}
           isInsideMedia={isInsideMedia}
-          setGlobalTheme={setTheme} // Pasamos el setter de tema al Header
+          setGlobalTheme={setTheme}
           onBackClick={isSettingsView ? navigateToLibrary : handleBack}
-          isLoading={isLoading} // Pasamos el loading al Header
+          isLoading={isLoading}
           activateEndingE={activateEndingE}
         />
 
@@ -169,17 +216,19 @@ function App() {
               mediaItems={computedMediaList}
               onMediaClick={onMediaInteraction}
               onToggleWatched={handleToggleWatched}
-              searchMode={searchMode} // Clave para el reseteo visual
+              searchMode={searchMode}
             />
           )}
         </div>
-        <GlitchOverlay />
+
+        {/* Solo procesamos e instanciamos el Glitch cuando está activo */}
+        {showGlitch && <GlitchOverlay />}
       </main>
     </div>
   );
 }
 
-const MainLibraryView = ({
+const MainLibraryView = React.memo(({
   isInsideMedia,
   currentMedia,
   isLoading,
@@ -206,7 +255,7 @@ const MainLibraryView = ({
           </div>
         ) : (
           <MediaList
-            key={searchMode} // Fuerza el re-montaje al cambiar de tab
+            key={searchMode}
             medias={mediaItems}
             handleMediaClick={onMediaClick}
             isInsideMedia={isInsideMedia}
@@ -217,7 +266,9 @@ const MainLibraryView = ({
       </div>
     </div>
   );
-};
+});
+
+MainLibraryView.displayName = 'MainLibraryView';
 
 const GlitchOverlay = () => {
   const [debugCode, setDebugCode] = useState("0x000000");
@@ -226,7 +277,8 @@ const GlitchOverlay = () => {
     const interval = setInterval(() => {
       const randomHex = "0x" + Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
       setDebugCode(randomHex);
-    }, 50); // Cambia cada 50ms
+    }, 50);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -239,7 +291,6 @@ const GlitchOverlay = () => {
         <span className={styles.syncText}>SYNCING_WITH_BUNKER</span>
         <span className={styles.hexCode}>{debugCode}</span>
 
-        {/* Barra de carga decorativa */}
         <div className={styles.fakeLoadingBar}>
           <div className={styles.fakeLoadingFill} />
         </div>

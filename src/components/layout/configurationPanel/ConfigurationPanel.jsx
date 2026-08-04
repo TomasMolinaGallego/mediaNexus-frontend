@@ -14,7 +14,6 @@ const ConfigurationPanel = () => {
     });
     const [status, setStatus] = useState({ message: '', type: '' });
 
-    // Cargar configuración inicial al montar
     useEffect(() => {
         const fetchConfig = async () => {
             try {

@@ -1,10 +1,6 @@
-// utils/notifications.ts
 import { toast, ExternalToast } from 'sonner';
 import React from 'react';
 
-/**
- * Estilos base que consumen las variables CSS de tu sistema de temas.
- */
 const commonStyle = {
   background: 'var(--bg-secondary)',
   color: 'var(--text-color)',
@@ -15,9 +11,6 @@ const commonStyle = {
   letterSpacing: '1px',
 };
 
-/**
- * Orquestador de notificaciones Alexandria
- */
 export const notify = {
   /**
    * Muestra un toast de carga persistente mientras se consulta la API.
